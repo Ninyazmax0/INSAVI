@@ -74,14 +74,12 @@ function setupUserUI(user) {
 function showPanel(view, user) {
   const currentPanel = document.querySelector('.panel.active');
   
-  // Si ya hay un panel activo, animar salida primero
   if (currentPanel) {
     currentPanel.classList.add('panel-exit');
-    currentPanel.addEventListener('animationend', function handler() {
-      currentPanel.removeEventListener('animationend', handler);
+    setTimeout(() => {
       currentPanel.classList.remove('active', 'panel-exit');
       activatePanel(view, user);
-    });
+    }, 200);
   } else {
     activatePanel(view, user);
   }
