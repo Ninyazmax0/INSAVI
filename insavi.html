@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INSAVI - Instituto Nacional Dr. Sarbelio Navarrete | Hogar del Águila Verde</title>
+  
+  <!-- Tipografía Google Fonts Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/insavi.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       1. NAVBAR PRINCIPAL
+       ========================================== -->
+  <header class="topbar-insavi">
+    <div class="container topbar-container">
+      <a href="#inicio" class="logo-insavi">
+        <div class="logo-shield-wrapper">
+          <img src="imgInsavi/img9.jpg" alt="Escudo Oficial INSAVI" class="logo-img">
+        </div>
+        <div class="logo-texts">
+          <span class="logo-title">INSAVI</span>
+          <span class="logo-subtitle">Dr. Sarbelio Navarrete</span>
+        </div>
+      </a>
+      
+      <nav class="nav-main" aria-label="Menú principal">
+        <ul class="nav-list" id="mainNavList">
+          <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+          <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+          <li><a href="#mascota" class="nav-link">Mascota</a></li>
+          <li><a href="#formacion" class="nav-link">Formación</a></li>
+          <li><a href="#oferta" class="nav-link">Bachilleratos</a></li>
+          <li><a href="#galeria" class="nav-link">Galería</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          <li>
+            <a href="index.html" class="nav-portal-btn">
+              <span>Portal Académico</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Abrir menú">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       2. HERO SECTION
+       ========================================== -->
+  <section id="inicio" class="hero-insavi">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="badge-green-pill">
+          <span class="pulse-dot"></span>
+          <span>Excelencia, Ciencia y Liderazgo</span>
+        </div>
+        <h1>Instituto Nacional<br><span class="gradient-text-purple">Dr. Sarbelio Navarrete</span></h1>
+        <div class="hero-motto">
+          <span>Hogar del Águila Verde &bull; San Vicente, El Salvador</span>
+        </div>
+        <p class="hero-desc">
+          Más de seis décadas forjando juventudes líderes, competentes y éticas. Ofrecemos educación media de alto nivel en Bachilleratos Generales y Técnicos Vocacionales con instalaciones y talleres de vanguardia.
+        </p>
+        <div class="hero-actions">
+          <a href="index.html" class="btn-primary-large">
+            <span>Acceder al Portal</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+            </svg>
+          </a>
+          <a href="#oferta" class="btn-secondary-outline">
+            <span>Explorar Especialidades</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-image-wrapper">
+        <div class="hero-card-frame">
+          <img src="imgInsavi/img8.jpg" alt="Instalaciones del Instituto Nacional Dr. Sarbelio Navarrete">
+          <div class="hero-image-overlay"></div>
+        </div>
+        
+        <div class="floating-hero-badge badge-top-left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>San Vicente, El Salvador</span>
+        </div>
+        <div class="floating-hero-badge badge-bottom-right">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg>
+          <span>+60 Años de Trayectoria</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       3. STATS BAND (BARRA FLOTANTE ELEVADA)
+       ========================================== -->
+  <div class="stats-floating-band">
+    <div class="container">
+      <div class="stats-grid-card">
+        <div class="stat-item">
+          <div class="stat-icon-wrapper icon-purple">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+          </div>
+          <div class="stat-data">
+            <span class="stat-number">60+</span>
+            <span class="stat-label">Años de Prestigio</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper icon-green">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="stat-data">
+            <span class="stat-number">3,500+</span>
+            <span class="stat-label">Alumnos y Egresados</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper icon-blue">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="stat-data">
+            <span class="stat-number">6</span>
+            <span class="stat-label">Carreras y Bachilleratos</span>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-icon-wrapper icon-gold">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="stat-data">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Compromiso Docente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       4. NOSOTROS (IDENTIDAD & ORGULLO)
+       ========================================== -->
+  <section id="nosotros" class="section-padding">
+    <div class="container">
+      <div class="split-content-grid">
+        <div class="about-image-card">
+          <img src="imgInsavi/img6.jpg" alt="Feria de Ciencias INSAVI">
+          <div class="about-img-tag">
+            <h4>Feria Científica & Tecnológica</h4>
+            <p>Nuestros estudiantes desarrollando maquetas biomédicas y proyectos de investigación aplicada.</p>
+          </div>
+        </div>
+
+        <div class="about-text-col">
+          <span class="section-pill-tag">Nuestra Identidad</span>
+          <h2 class="section-title">Orgullo Vicentino, Ciencia y Futuro</h2>
+          <p class="lead-text">
+            El <strong>Instituto Nacional Dr. Sarbelio Navarrete (INSAVI)</strong> es un referente histórico en el departamento de San Vicente y en toda la zona paracentral de El Salvador, caracterizado por una rigurosa formación académica, disciplina y valores cívicos.
+          </p>
+
+          <div class="mv-grid">
+            <div class="mv-card mision">
+              <div class="mv-card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--insavi-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <h3>Misión</h3>
+              </div>
+              <p>Formar integralmente a la juventud con solvencia científica, técnica y humana, fomentando la inclusión, el pensamiento crítico y el compromiso social.</p>
+            </div>
+
+            <div class="mv-card vision">
+              <div class="mv-card-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--insavi-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <h3>Visión</h3>
+              </div>
+              <p>Ser la institución de educación media líder a nivel nacional, destacada por la calidad e innovación de sus egresados y su aporte al desarrollo del país.</p>
+            </div>
+          </div>
+
+          <div class="values-tags">
+            <span class="val-pill">Disciplina</span>
+            <span class="val-pill">Rigor Científico</span>
+            <span class="val-pill">Solidaridad</span>
+            <span class="val-pill">Superación</span>
+            <span class="val-pill">Innovación</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       5. MASCOTA OFICIAL (EL ÁGUILA VERDE)
+       ========================================== -->
+  <section id="mascota" class="section-padding section-bg-alt">
+    <div class="container">
+      <div class="mascot-section-wrap">
+        <div class="mascot-grid">
+          <div class="mascot-info-col">
+            <span class="section-pill-tag green">Símbolo de Honor</span>
+            <h2>El Águila Verde</h2>
+            <p>
+              Presente en el corazón de nuestro escudo oficial, el <strong>Águila Verde</strong> encarna la estirpe, la tenacidad y la elevación moral e intelectual de la comunidad insavina. 
+            </p>
+            <p>
+              Con sus alas extendidas sobre el libro del saber y bajo el sol radiante de Cuscatlán, recuerda a cada alumno que no existen barreras insuperables cuando se tiene la disciplina de prepararse y el valor de soñar en grande.
+            </p>
+
+            <div class="mascot-pillars">
+              <div class="pillar-box">
+                <div class="pillar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
+                <h4>Visión Alta</h4>
+                <p>Capacidad de proyectar el futuro y liderar con sabiduría.</p>
+              </div>
+              <div class="pillar-box">
+                <div class="pillar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                </div>
+                <h4>Fortaleza</h4>
+                <p>Perseverancia frente a cualquier adversidad académica.</p>
+              </div>
+              <div class="pillar-box">
+                <div class="pillar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h4>Identidad</h4>
+                <p>Amor por San Vicente y entrega a nuestra patria.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mascot-visual-col">
+            <div class="shield-pedestal">
+              <div class="shield-halo"></div>
+              <img src="imgInsavi/img9.jpg" alt="Escudo Oficial INSAVI - Águila Verde" class="shield-img">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       6. ÁREAS DE FORMACIÓN
+       ========================================== -->
+  <section id="formacion" class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-pill-tag">Aprendizaje Activo</span>
+        <h2 class="section-title">Áreas de Formación Práctica</h2>
+        <p class="section-subtitle">
+          Combinamos la teoría rigurosa con prácticas en laboratorios, talleres especializados y simulaciones empresariales reales.
+        </p>
+      </div>
+
+      <div class="cards-grid-3">
+        <!-- Card 1: Ciencias y Anatomía -->
+        <div class="feature-card">
+          <div class="card-img-wrapper">
+            <img src="imgInsavi/img6.jpg" alt="Feria de Ciencias y Anatomía">
+            <span class="card-badge-floating">Ciencias & Salud</span>
+          </div>
+          <div class="feature-card-body">
+            <h3>Feria de Ciencias & Anatomía</h3>
+            <p>
+              Investigación biomédica, comprensión profunda de los sistemas anatómicos y experimentos interactivos liderados por los estudiantes.
+            </p>
+            <div class="card-tags">
+              <span class="tag-mini">#Biología</span>
+              <span class="tag-mini">#Anatomía</span>
+              <span class="tag-mini">#Investigación</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Emprendimiento -->
+        <div class="feature-card">
+          <div class="card-img-wrapper">
+            <img src="imgInsavi/img7.jpg" alt="Proyectos y Emprendimiento">
+            <span class="card-badge-floating">Comercio & Gestión</span>
+          </div>
+          <div class="feature-card-body">
+            <h3>Emprendimiento y Negocios</h3>
+            <p>
+              Ferias productivas, creación de planes de negocio viables, comercialización de productos y fomento de la mentalidad emprendedora.
+            </p>
+            <div class="card-tags">
+              <span class="tag-mini">#Finanzas</span>
+              <span class="tag-mini">#Marketing</span>
+              <span class="tag-mini">#Innovación</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Especialidades Técnicas -->
+        <div class="feature-card">
+          <div class="card-img-wrapper">
+            <img src="imgInsavi/img4.jpg" alt="Especialidades Técnicas">
+            <span class="card-badge-floating">Ingeniería & Tecnología</span>
+          </div>
+          <div class="feature-card-body">
+            <h3>Talleres Técnicos Especializados</h3>
+            <p>
+              Práctica intensiva en mecánica automotriz, diagnóstico computarizado, desarrollo de software y administración de sistemas contables.
+            </p>
+            <div class="card-tags">
+              <span class="tag-mini">#Automotriz</span>
+              <span class="tag-mini">#Software</span>
+              <span class="tag-mini">#Contabilidad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       7. OFERTA ACADÉMICA / BACHILLERATOS
+       ========================================== -->
+  <section id="oferta" class="section-padding section-bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-pill-tag">Propuesta Curricular</span>
+        <h2 class="section-title">Oferta de Bachilleratos</h2>
+        <p class="section-subtitle">
+          Modalidades diurnas diseñadas para insertarse con éxito en la fuerza laboral o continuar estudios superiores universitarios.
+        </p>
+      </div>
+
+      <div class="academic-grid-6">
+        <!-- 1. Bachillerato General -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-purple">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">2 Años</span>
+              <span class="pill-tipo">General</span>
+            </div>
+          </div>
+          <h3>Bachillerato General</h3>
+          <p class="card-desc">Sólida preparación científica, matemática y humanística pensada para el ingreso y éxito en carreras universitarias.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Enfoque integral en ciencias y letras</li>
+            <li><span class="check-icon">✓</span> Preparación de excelencia para la PAES/AVANZO</li>
+            <li><span class="check-icon">✓</span> Habilidades en investigación y oratoria</li>
+          </ul>
+        </div>
+
+        <!-- 2. Mantenimiento Automotriz -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-blue">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">3 Años</span>
+              <span class="pill-tipo">Vocacional</span>
+            </div>
+          </div>
+          <h3>Mantenimiento Automotriz</h3>
+          <p class="card-desc">Diagnosis, mantenimiento preventivo y reparación experta de motores de combustión, sistemas eléctricos e híbridos.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Diagnóstico computarizado con escáner</li>
+            <li><span class="check-icon">✓</span> Inyección electrónica y sistemas de frenos</li>
+            <li><span class="check-icon">✓</span> Pasantías en talleres y agencias del país</li>
+          </ul>
+        </div>
+
+        <!-- 3. Sistemas Informáticos / Software -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-green">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">3 Años</span>
+              <span class="pill-tipo">Vocacional</span>
+            </div>
+          </div>
+          <h3>Desarrollo de Software</h3>
+          <p class="card-desc">Programación web y móvil, bases de datos relacionales, mantenimiento de equipos de cómputo y redes locales.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Frontend, Backend y Bases de Datos</li>
+            <li><span class="check-icon">✓</span> Configuración de redes y ciberseguridad básica</li>
+            <li><span class="check-icon">✓</span> Laboratorios con computadoras modernas</li>
+          </ul>
+        </div>
+
+        <!-- 4. Contabilidad -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-gold">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">3 Años</span>
+              <span class="pill-tipo">Vocacional</span>
+            </div>
+          </div>
+          <h3>Contabilidad & Finanzas</h3>
+          <p class="card-desc">Herramientas técnicas de contabilidad comercial, gestión de costos, legislación tributaria salvadoreña y auditoría.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Manejo de sistemas contables digitales</li>
+            <li><span class="check-icon">✓</span> Declaración de impuestos y planilla de pagos</li>
+            <li><span class="check-icon">✓</span> Administración y finanzas corporativas</li>
+          </ul>
+        </div>
+
+        <!-- 5. Servicios Turísticos -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-purple">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">3 Años</span>
+              <span class="pill-tipo">Vocacional</span>
+            </div>
+          </div>
+          <h3>Servicios Turísticos</h3>
+          <p class="card-desc">Atención al cliente de nivel internacional, guiado turístico patrimonial, hotelería y logística de congresos y eventos.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Inglés para la hospitalidad y turismo</li>
+            <li><span class="check-icon">✓</span> Promoción del patrimonio cultural vicentino</li>
+            <li><span class="check-icon">✓</span> Protocolo y gestión de eventos masivos</li>
+          </ul>
+        </div>
+
+        <!-- 6. Atención Primaria en Salud -->
+        <div class="academic-card">
+          <div class="academic-card-top">
+            <div class="icon-wrapper-large icon-green">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+              </svg>
+            </div>
+            <div class="academic-pills">
+              <span class="pill-duracion">3 Años</span>
+              <span class="pill-tipo">Vocacional</span>
+            </div>
+          </div>
+          <h3>Atención Primaria en Salud</h3>
+          <p class="card-desc">Primeros auxilios avanzados, enfermería preventiva y comunitaria, signos vitales y promoción de la salud pública.</p>
+          <ul class="academic-features-list">
+            <li><span class="check-icon">✓</span> Prácticas en unidades comunitarias de salud</li>
+            <li><span class="check-icon">✓</span> Protocolos de emergencia y bioseguridad</li>
+            <li><span class="check-icon">✓</span> Fundamento clínico para carreras médicas</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       8. GALERÍA INSTITUCIONAL
+       ========================================== -->
+  <section id="galeria" class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-pill-tag">Comunidad & Vida Estudiantil</span>
+        <h2 class="section-title">Momentos que Dejan Huella</h2>
+        <p class="section-subtitle">
+          Actividades académicas, ferias culturales, celebraciones y el entusiasmo que define el día a día en INSAVI.
+        </p>
+      </div>
+
+      <div class="gallery-grid-modern">
+        <div class="gallery-card">
+          <img src="imgInsavi/img3.jpg" alt="Día del alumno INSAVI">
+          <div class="gallery-overlay">
+            <h4>Día del Estudiante</h4>
+            <p>Convivencia y alegría estudiantil</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imgInsavi/img4.jpg" alt="Presentación de Especialidades Técnicas">
+          <div class="gallery-overlay">
+            <h4>Especialidades Técnicas</h4>
+            <p>Orgullo y demostración de destrezas</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imgInsavi/img7.jpg" alt="Feria de Emprendimiento INSAVI">
+          <div class="gallery-overlay">
+            <h4>Feria de Emprendimiento</h4>
+            <p>Iniciativa empresarial de los alumnos</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imgInsavi/img5.jpg" alt="Actividades de Clausura y Feria">
+          <div class="gallery-overlay">
+            <h4>Festivales Culturales</h4>
+            <p>Tradición y arte en el gimnasio</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imgInsavi/img8.jpg" alt="Bienvenidos a INSAVI">
+          <div class="gallery-overlay">
+            <h4>Gimnasio e Instalaciones</h4>
+            <p>Espacios para el deporte y eventos</p>
+          </div>
+        </div>
+
+        <div class="gallery-card">
+          <img src="imgInsavi/img6.jpg" alt="Exposiciones Científicas">
+          <div class="gallery-overlay">
+            <h4>Exposición Biomédica</h4>
+            <p>Ciencia y rigor explicativo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       9. BANNER ADMISIÓN Y MATRÍCULA
+       ========================================== -->
+  <div class="container">
+    <div class="cta-admission-banner">
+      <div class="cta-text-side">
+        <h2>¡Forma parte de la Gran Familia del Águila Verde!</h2>
+        <p>
+          Inicia tu camino al éxito profesional con nosotros. Contamos con becas del Ministerio de Educación, programas de refuerzo escolar y orientación vocacional continua.
+        </p>
+      </div>
+      <div class="cta-actions-side">
+        <a href="#contacto" class="btn-primary-large">
+          <span>Contactar a Secretaría</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="index.html" class="btn-secondary-outline">
+          <span>Portal de Usuarios</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       10. CONTACTO Y UBICACIÓN
+       ========================================== -->
+  <section id="contacto" class="section-padding section-bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-pill-tag">Canales Oficiales</span>
+        <h2 class="section-title">Contáctanos y Visítanos</h2>
+        <p class="section-subtitle">
+          Estamos a tu disposición para consultas de matrícula, constancias y trámites académicos.
+        </p>
+      </div>
+
+      <div class="contact-cards-grid">
+        <!-- Teléfono -->
+        <div class="contact-card-box">
+          <div class="contact-card-icon icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <h3>Teléfono</h3>
+          <p>Atención de recepción y secretaría académica.</p>
+          <a href="tel:23930250" class="contact-action-link">2393 0250 ➔</a>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="contact-card-box">
+          <div class="contact-card-icon icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <h3>Correo Electrónico</h3>
+          <p>Consultas oficiales y entrega de documentación.</p>
+          <a href="mailto:insavi.mined@gmail.com" class="contact-action-link">insavi.mined@gmail.com ➔</a>
+        </div>
+
+        <!-- Ubicación -->
+        <div class="contact-card-box">
+          <div class="contact-card-icon icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <h3>Ubicación</h3>
+          <p>San Vicente, El Salvador. Instalaciones principales.</p>
+          <a href="https://maps.app.goo.gl/DSSGwWLe1RzvRG667" target="_blank" rel="noopener noreferrer" class="contact-action-link">Ver en Google Maps 📍</a>
+        </div>
+
+        <!-- Redes Sociales -->
+        <div class="contact-card-box">
+          <div class="contact-card-icon icon-gold">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </div>
+          <h3>Facebook Oficial</h3>
+          <p>Noticias, eventos y comunicados institucionales.</p>
+          <a href="https://www.facebook.com/p/Instituto-Nacional-Dr-Sarbelio-Navarrete-INSAVI-100063737353272/" target="_blank" rel="noopener noreferrer" class="contact-action-link">Visitar Página 🌐</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       11. FOOTER INSTITUCIONAL
+       ========================================== -->
+  <footer class="footer-insavi">
+    <div class="container footer-container">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <div class="logo-shield-wrapper" style="width: 42px; height: 42px;">
+            <img src="imgInsavi/img9.jpg" alt="Escudo INSAVI" class="logo-img">
+          </div>
+          <h3>INSAVI</h3>
+        </div>
+        <p class="footer-brand-desc">
+          Instituto Nacional Dr. Sarbelio Navarrete. Más de 60 años educando a la juventud salvadoreña con visión científica, tecnológica y humanística.
+        </p>
+        <span class="footer-motto-tag">🦅 ¡Orgullo Águila Verde!</span>
+      </div>
+
+      <div class="footer-col">
+        <h4>Especialidades</h4>
+        <ul class="footer-links-list">
+          <li><a href="#oferta">Bachillerato General</a></li>
+          <li><a href="#oferta">Mantenimiento Automotriz</a></li>
+          <li><a href="#oferta">Desarrollo de Software</a></li>
+          <li><a href="#oferta">Contabilidad & Finanzas</a></li>
+          <li><a href="#oferta">Servicios Turísticos</a></li>
+          <li><a href="#oferta">Atención en Salud</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Enlaces Rápidos</h4>
+        <ul class="footer-links-list">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#nosotros">Identidad & Historia</a></li>
+          <li><a href="#mascota">Nuestra Mascota</a></li>
+          <li><a href="#formacion">Áreas Prácticas</a></li>
+          <li><a href="#galeria">Galería Estudiantil</a></li>
+          <li><a href="#contacto">Contacto y Horarios</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Portal Institucional</h4>
+        <p class="footer-brand-desc" style="margin-bottom: 1rem;">
+          Accede al sistema de gestión académica para estudiantes, docentes, padres y personal.
+        </p>
+        <a href="index.html" class="nav-portal-btn" style="display: inline-flex;">
+          <span>Ir al Portal ➔</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="footer-bottom-bar">
+        <p>&copy; 2026 Instituto Nacional Dr. Sarbelio Navarrete (INSAVI). Todos los derechos reservados.</p>
+        <p>San Vicente, El Salvador &bull; Desarrollado con Excelencia Tecnológica</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/insavi.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INSAVI - Iniciar Sesión</title>
+  <meta name="description" content="Portal académico del Instituto Nacional Dr. Sarbelio Navarrete. Acceso para administradores, docentes, estudiantes y padres de familia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/insavi.css">
+</head>
+<body style="background: #0c0b15; margin: 0; min-height: 100vh; font-family: 'Outfit', sans-serif;">
+
+  <div class="login-page-wrap">
+    
+    <!-- CARD CONTENEDOR PRINCIPAL -->
+    <div class="login-card-container">
+      
+      <!-- LADO IZQUIERDO: HERO / BRAND -->
+      <aside class="login-hero-side">
+        <!-- SVG Decorativo de curvas / ondas de fondo -->
+        <svg class="hero-wave-bg" viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M-50 150 C 120 220, 200 80, 350 250 C 450 370, 280 500, 520 580" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4 6"/>
+          <path d="M-20 280 C 150 350, 180 200, 380 360 C 480 450, 320 580, 540 640" stroke="#6366f1" stroke-width="1.5" opacity="0.6"/>
+        </svg>
+
+        <!-- Matriz de puntos decorativa (inferior izquierda) -->
+        <div class="dot-grid">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="login-hero-content">
+          <!-- Badge Pill con el Escudo Oficial de INSAVI -->
+          <div class="brand-badge">
+            <img src="imgInsavi/img9.jpg" alt="Escudo INSAVI" style="width: 20px; height: 20px; object-fit: contain; border-radius: 3px; background: #fff; padding: 1px;">
+            INSAVI
+          </div>
+
+          <h1>
+            Excelencia que<br>
+            <span class="purple-text">transforma vidas.</span>
+          </h1>
+
+          <div class="accent-bar"></div>
+
+          <p class="desc">
+            Sistema de gestión académica con control de notas, horarios y formación técnica para la juventud salvadoreña.
+          </p>
+
+          <ul class="feature-list">
+            <li><span class="bullet-dot"></span> Gestión académica centralizada</li>
+            <li><span class="bullet-dot"></span> Control de acceso por roles</li>
+            <li><span class="bullet-dot"></span> Información segura y confiable</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- LADO DERECHO: FORMULARIO DE ACCESO -->
+      <main class="login-form-side">
+        <div class="login-form-wrap" style="max-width: 100%;">
+          
+          <h2>Iniciar sesión</h2>
+          <p class="form-subtitle">Ingresa tus credenciales para acceder al sistema.</p>
+
+          <div class="login-error" id="loginError" role="alert"></div>
+
+          <form class="login-form" id="loginForm" novalidate style="gap: 1.25rem;">
+            
+            <!-- Campo Correo -->
+            <div class="form-group">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <div class="input-wrapper">
+                <span class="input-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <input type="email" class="login-input" id="email" name="email" placeholder="ejemplo@insavi.edu.sv" autocomplete="email" required>
+              </div>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="form-group">
+              <label for="password" class="form-label">Contraseña</label>
+              <div class="input-wrapper">
+                <span class="input-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input type="password" class="login-input" id="password" name="password" placeholder="Tu contraseña" autocomplete="current-password" required>
+                <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility()" aria-label="Mostrar u ocultar contraseña">
+                  <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              <span class="error-text" id="passwordError" style="color: #f87171; font-size: 0.8rem; margin-top: 0.35rem; display: block;"></span>
+            </div>
+
+            <!-- Recordarme & Olvidaste Contraseña -->
+            <div class="form-aux-row">
+              <label class="remember-label">
+                <input type="checkbox" id="rememberMe">
+                <span>Recordarme</span>
+              </label>
+              <a href="#" onclick="alert('Por favor comunícate con la Dirección o Administración del INSAVI para restablecer tu acceso.'); return false;" class="forgot-password-link">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
+
+            <!-- Botón Ingresar -->
+            <button type="submit" class="btn-login-submit" id="loginBtn">
+              Ingresar al portal
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Divisor con o -->
+          <div class="form-split-divider">
+            <span>o</span>
+          </div>
+
+          <!-- Botón de Página Informativa -->
+          <a href="insavi.html" class="btn-public-info">
+            Ver página informativa del instituto
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+
+          <!-- Credenciales Demo (Plegables para pruebas rápidas) -->
+          <div class="demo-creds-drawer">
+            <button type="button" class="demo-creds-btn" onclick="toggleDemoDrawer()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Credenciales de prueba rápida <span id="demoArrow">▼</span>
+            </button>
+            <div id="demoCredentialsContainer" class="demo-credentials" style="display: none;">
+              <div class="demo-head">Haz clic en una cuenta para rellenar los datos:</div>
+              <div class="demo-credential" onclick="fillDemo('admin@insavi.edu.sv', 'admin123')">
+                <span class="cred-role">Administración</span>
+                <span class="cred-email">admin@insavi.edu.sv</span>
+                <span class="cred-pass">Clave: <code>admin123</code></span>
+              </div>
+              <div class="demo-credential" onclick="fillDemo('maria.garcia@insavi.edu.sv', 'docente123')">
+                <span class="cred-role">Docencia</span>
+                <span class="cred-email">maria.garcia@insavi.edu.sv</span>
+                <span class="cred-pass">Clave: <code>docente123</code></span>
+              </div>
+              <div class="demo-credential" onclick="fillDemo('ana.lopez@estudiante.insavi.edu.sv', 'est123')">
+                <span class="cred-role">Estudiantil</span>
+                <span class="cred-email">ana.lopez@estudiante.insavi.edu.sv</span>
+                <span class="cred-pass">Clave: <code>est123</code></span>
+              </div>
+              <div class="demo-credential" onclick="fillDemo('jorge.lopez@padre.insavi.edu.sv', 'padre123')">
+                <span class="cred-role">Familia</span>
+                <span class="cred-email">jorge.lopez@padre.insavi.edu.sv</span>
+                <span class="cred-pass">Clave: <code>padre123</code></span>
+              </div>
+              <div class="demo-credential" onclick="fillDemo('pedro.ramirez@insavi.edu.sv', 'servicios123')">
+                <span class="cred-role">Servicios Varios</span>
+                <span class="cred-email">pedro.ramirez@insavi.edu.sv</span>
+                <span class="cred-pass">Clave: <code>servicios123</code></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+
+    <!-- PIE DE PÁGINA EXTERNO -->
+    <div class="login-footer-copy">
+      © 2024 INSAVI · Instituto Nacional Dr. Sarbelio Navarrete
+    </div>
+
+  </div>
+
+  <script src="data/seed.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Visibilidad de contraseña
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        `;
+      } else {
+        pwdInput.type = 'password';
+        eyeIcon.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        `;
+      }
+    }
+
+    // Toggle para credenciales de demostración
+    function toggleDemoDrawer() {
+      const container = document.getElementById('demoCredentialsContainer');
+      const arrow = document.getElementById('demoArrow');
+      const isHidden = container.style.display === 'none';
+      container.style.display = isHidden ? 'block' : 'none';
+      arrow.textContent = isHidden ? '▲' : '▼';
+    }
+
+    // Auto-rellenar credenciales
+    function fillDemo(email, pass) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = pass;
+      document.getElementById('email').focus();
+    }
+
+    // Recordar correo si fue guardado
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedEmail = localStorage.getItem('insavi_remember_email');
+      if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('rememberMe').checked = true;
+      }
+
+      document.getElementById('loginForm')?.addEventListener('submit', () => {
+        const remember = document.getElementById('rememberMe')?.checked;
+        const email = document.getElementById('email')?.value.trim();
+        if (remember && email) {
+          localStorage.setItem('insavi_remember_email', email);
+        } else {
+          localStorage.removeItem('insavi_remember_email');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
