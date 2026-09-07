@@ -36,7 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
 
   const urlParams = new URLSearchParams(window.location.search);
-  const view = urlParams.get('view') || user.rol;
+  let view = urlParams.get('view');
+
+  if (!view) {
+    window.location.replace(`dashboard.html?view=${user.rol}`);
+    return;
+  }
 
   showPanel(view, user);
 });
@@ -83,8 +88,6 @@ function showPanel(view, user) {
 }
 
 function activatePanel(view, user) {
-  console.log('%c[INSAVI DEBUG] activatePanel() view:', view, '| user.rol:', user.rol, '| user.nombre:', user.nombre);
-
   // Resetear tabs admin
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -107,15 +110,12 @@ function activatePanel(view, user) {
   };
 
   const panelId = panelMap[view];
-  console.log('[INSAVI DEBUG] panelId:', panelId);
   if (!panelId) {
-    console.warn('[INSAVI DEBUG] panelId no encontrado, redirigiendo a:', user.rol);
     window.location.href = `dashboard.html?view=${user.rol}`;
     return;
   }
 
   document.getElementById(panelId).classList.add('active');
-  console.log('[INSAVI DEBUG] Panel', panelId, 'ahora tiene clase "active"');
 
   if (titleMap[view]) {
     document.getElementById('pageTitle').textContent = titleMap[view];

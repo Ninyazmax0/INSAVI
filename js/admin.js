@@ -9,31 +9,11 @@ const Admin = {
   // ==========================================
 
   init() {
-    console.log('%c[INSAVI DEBUG] Admin.init() ejecutándose', 'color: #ff6600; font-weight: bold; font-size: 14px;');
-    
     this.currentPageUsuarios = 1;
     this.currentPageSecciones = 1;
     this.currentPageMaterias = 1;
     this.currentPageHorarios = 1;
     this.pageSize = 7;
-
-    // Diagnóstico de localStorage
-    const rawUsuarios = localStorage.getItem('insavi_usuarios');
-    console.log('[INSAVI DEBUG] localStorage raw usuarios:', rawUsuarios ? rawUsuarios.substring(0, 100) + '...' : 'NULL');
-    const parsed = rawUsuarios ? JSON.parse(rawUsuarios) : [];
-    console.log('[INSAVI DEBUG] parsed usuarios count:', parsed.length);
-    console.log('[INSAVI DEBUG] DB.getUsuarios() returns:', DB.getUsuarios().length, 'items');
-
-    // Test de escritura/lectura de localStorage
-    try {
-      localStorage.setItem('_test_write', 'ok');
-      const testRead = localStorage.getItem('_test_write');
-      console.log('[INSAVI DEBUG] localStorage read/write test:', testRead === 'ok' ? 'OK' : 'FALLÓ');
-      localStorage.removeItem('_test_write');
-    } catch (e) {
-      console.error('[INSAVI DEBUG] localStorage BLOQUEADO:', e.message);
-    }
-
     this.cargarEstadisticas();
     this.cargarUsuarios();
     this.cargarSecciones();

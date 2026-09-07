@@ -544,26 +544,15 @@ const INSAVI_SEED_VERSION = 'v3.0_expanded_full';
 // Se verifica que los datos EXISTAN y no estén vacíos; si la versión coincide
 // pero falta info (por un fallo anterior), se repuebla igualmente.
 function cargarDatosIniciales() {
-  console.log('%c[INSAVI DEBUG] === cargarDatosIniciales() ejecutándose ===', 'color: #ff6600; font-weight: bold; font-size: 14px;');
-
   const currentVersion = localStorage.getItem('insavi_seed_version');
   const usuarios = localStorage.getItem('insavi_usuarios');
-
-  console.log('[INSAVI DEBUG] currentVersion:', currentVersion);
-  console.log('[INSAVI DEBUG] SEED_VERSION esperada:', INSAVI_SEED_VERSION);
-  console.log('[INSAVI DEBUG] usuarios exists:', !!usuarios, '| length:', usuarios ? usuarios.length : 0);
 
   const datosValidos = currentVersion === INSAVI_SEED_VERSION &&
     usuarios && usuarios !== '[]' && usuarios !== 'null';
 
-  console.log('[INSAVI DEBUG] datosValidos:', datosValidos);
-
   if (datosValidos) {
-    console.log('%c[INSAVI DEBUG] Datos ya válidos — NO se re-seedea', 'color: #22c55e;');
     return false;
   }
-
-  console.log('%c[INSAVI DEBUG] Sembrando datos frescos...', 'color: #ef4444; font-weight: bold;');
 
   localStorage.setItem('insavi_usuarios', JSON.stringify(INSAVI_SEED.usuarios));
   localStorage.setItem('insavi_secciones', JSON.stringify(INSAVI_SEED.secciones));
@@ -572,10 +561,7 @@ function cargarDatosIniciales() {
   localStorage.setItem('insavi_notas', JSON.stringify(INSAVI_SEED.notas));
   localStorage.setItem('insavi_seed_version', INSAVI_SEED_VERSION);
 
-  const verify = localStorage.getItem('insavi_usuarios');
-  console.log('[INSAVI DEBUG] Verificación post-seed — usuarios now:', verify ? JSON.parse(verify).length : 'FALLO AL ESCRIBIR');
-
-  console.log(`%c[INSAVI] Base de datos enriquecida cargada con éxito (Versión ${INSAVI_SEED_VERSION})`, 'color: #8b5cf6; font-weight: bold;');
+  console.log(`%c[INSAVI] Base de datos cargada (v${INSAVI_SEED_VERSION})`, 'color: #8b5cf6; font-weight: bold;');
   return true;
 }
 
