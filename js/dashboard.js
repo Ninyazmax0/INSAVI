@@ -177,14 +177,14 @@ function generateSidebarNav(rol) {
   } else if (rol === 'docente') {
     html = `
       <div class="nav-section">General</div>
-      <button class="nav-link active" data-view="docente" onclick="showPanel('docente', DB.getCurrentUser()); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+      <button class="nav-link active" data-docente-view="resumen" onclick="showDocenteSubPanel('resumen'); return false;">
         <span class="nav-icon">${SVG.home}</span> Resumen
       </button>
       <div class="nav-section">Académico</div>
-      <button class="nav-link" data-view="docente" onclick="showPanel('docente', DB.getCurrentUser()); document.querySelector('.docente-grid').scrollIntoView({behavior: 'smooth', block: 'center'}); return false;">
+      <button class="nav-link" data-docente-view="notas" onclick="showDocenteSubPanel('notas'); return false;">
         <span class="nav-icon">${SVG.pencil}</span> Registro de notas
       </button>
-      <button class="nav-link" data-view="docente" onclick="showPanel('docente', DB.getCurrentUser()); document.querySelector('#horarioDocente').scrollIntoView({behavior: 'smooth', block: 'start'}); return false;">
+      <button class="nav-link" data-docente-view="horario" onclick="showDocenteSubPanel('horario'); return false;">
         <span class="nav-icon">${SVG.clock}</span> Mi horario
       </button>
       <div class="nav-section" style="margin-top: auto;">Próximos eventos</div>
@@ -305,6 +305,37 @@ function showAdminTab(tab) {
     case 'materias': Admin.cargarMaterias(); break;
     case 'horarios': Admin.cargarHorarios(); break;
   }
+}
+
+// ==========================================
+// SUB-PANELS DOCENTE (toggle entre vistas)
+// ==========================================
+
+function showDocenteSubPanel(view) {
+  const secciones = {
+    resumen: document.getElementById('docenteSeccionNotas'),
+    notas: document.getElementById('docenteSeccionNotas'),
+    horario: document.getElementById('docenteSeccionHorario')
+  };
+
+  // Resumen muestra todo, notas solo notas, horario solo horario
+  if (view === 'resumen') {
+    Object.values(secciones).forEach(s => { if (s) s.style.display = ''; });
+  } else if (view === 'notas') {
+    if (secciones.notas) secciones.notas.style.display = '';
+    if (secciones.horario) secciones.horario.style.display = 'none';
+  } else if (view === 'horario') {
+    if (secciones.notas) secciones.notas.style.display = 'none';
+    if (secciones.horario) secciones.horario.style.display = '';
+  }
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
+  const btn = document.querySelector(`.sidebar-nav .nav-link[data-docente-view="${view}"]`);
+  if (btn) btn.classList.add('active');
+
+  // Scroll to top of panel
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ==========================================
