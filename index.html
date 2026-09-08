@@ -189,7 +189,6 @@
   <script src="js/db.js"></script>
   <script src="js/auth.js"></script>
   <script>
-    // Visibilidad de contraseña
     function togglePasswordVisibility() {
       const pwdInput = document.getElementById('password');
       const eyeIcon = document.getElementById('eyeIcon');
@@ -208,7 +207,6 @@
       }
     }
 
-    // Toggle para credenciales de demostración
     function toggleDemoDrawer() {
       const container = document.getElementById('demoCredentialsContainer');
       const arrow = document.getElementById('demoArrow');
@@ -217,14 +215,12 @@
       arrow.textContent = isHidden ? '▲' : '▼';
     }
 
-    // Auto-rellenar credenciales
     function fillDemo(email, pass) {
       document.getElementById('email').value = email;
       document.getElementById('password').value = pass;
       document.getElementById('email').focus();
     }
 
-    // Recordar correo si fue guardado
     document.addEventListener('DOMContentLoaded', () => {
       const savedEmail = localStorage.getItem('insavi_remember_email');
       if (savedEmail) {
