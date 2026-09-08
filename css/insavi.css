@@ -1,44 +1,31 @@
-/* ==========================================================================
-   INSAVI - Sistema de Diseño
-   Paleta institucional refrigerada + tipografía distintiva
-   ========================================================================== */
-
 :root {
-  /* ===== Paleta institucional (azul / verde / amarillo) ===== */
   --azul-900: #0f172a;
   --azul-800: #1e293b;
   --azul-700: #334155;
   --azul-600: #2563eb;
   --azul-500: #3b82f6;
   --azul-100: #dbeafe;
-
   --verde-700: #15803d;
   --verde-600: #16a34a;
   --verde-500: #22c55e;
   --verde-100: #dcfce7;
-
   --amarillo-500: #eab308;
   --amarillo-400: #facc15;
   --amarillo-100: #fef9c3;
-
   --tinta-900: #0f172a;
   --tinta-700: #334155;
   --tinta-500: #64748b;
   --tinta-300: #94a3b8;
-
   --neutro-50: #f8fafc;
   --neutro-100: #f1f5f9;
   --neutro-200: #e2e8f0;
   --neutro-400: #94a3b8;
-
   --exito-700: #15803d;
   --exito-100: #dcfce7;
   --warning-700: #b45309;
   --warning-100: #fef3c7;
   --error-700: #b91c1c;
   --error-100: #fee2e2;
-
-  /* ===== Roles de superficie ===== */
   --bg-canvas: #f1f5f9;
   --bg-surface: #ffffff;
   --bg-raised: #f8fafc;
@@ -47,89 +34,64 @@
   --text-muted: var(--tinta-300);
   --border-subtle: var(--neutro-200);
   --border-strong: var(--tinta-300);
-
   --accent: var(--azul-600);
   --accent-hover: var(--azul-700);
   --accent-press: var(--azul-800);
   --accent-soft: var(--azul-100);
-
   --shadow-1: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-4: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-
   --radius-xs: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-2xl: 32px;
-
   --font-display: 'Outfit', sans-serif;
   --font-body: 'Outfit', sans-serif;
-
   --ring: 0 0 0 3px rgba(37, 99, 235, 0.25);
-
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  /* Fondos profundos con tinte púrpura/azul oscuro */
-  --bg-canvas: #101018;      /* Fondo principal */
-  --bg-surface: #181824;     /* Barra lateral / Header */
-  --bg-raised: #1d1d2b;      /* Tarjetas, Filas de tabla */
-  
+  --bg-canvas: #101018;
+  --bg-surface: #181824;
+  --bg-raised: #1d1d2b;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  
-  /* Bordes muy sutiles */
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-strong: rgba(255, 255, 255, 0.1);
-
-  /* Acento: Púrpura brillante */
-  --accent: #8b5cf6;         /* Botones, Activo */
+  --accent: #8b5cf6;
   --accent-hover: #7c3aed;
   --accent-soft: rgba(139, 92, 246, 0.15);
-
-  /* Colores institucionales / KPI en dark mode */
   --azul-900: #1e1b4b;
-  --azul-600: #6366f1;       /* Indigo */
+  --azul-600: #6366f1;
   --azul-100: rgba(99, 102, 241, 0.15);
-  
-  --verde-100: rgba(16, 185, 129, 0.15); /* Esmeralda */
+  --verde-100: rgba(16, 185, 129, 0.15);
   --verde-500: #10b981;
   --verde-600: #059669;
-
-  --amarillo-100: rgba(245, 158, 11, 0.15); /* Ambar */
+  --amarillo-100: rgba(245, 158, 11, 0.15);
   --amarillo-500: #f59e0b;
   --amarillo-600: #d97706;
-
-  /* Estados */
   --exito-100: rgba(16, 185, 129, 0.2);
   --exito-700: #10b981;
   --warning-100: rgba(245, 158, 11, 0.2);
   --warning-700: #f59e0b;
   --error-100: rgba(239, 68, 68, 0.2);
   --error-700: #ef4444;
-
   --shadow-1: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
   --shadow-2: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
   --shadow-3: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
   --shadow-4: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-
   --ring: 0 0 0 3px rgba(139, 92, 246, 0.4);
-
   color-scheme: dark;
 }
 
-/* ==========================================================================
-   RESET / BASE
-   ========================================================================== */
+/* BASE */
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -163,9 +125,7 @@ button {
   background: none;
 }
 
-input,
-select,
-textarea {
+input, select, textarea {
   font-family: inherit;
 }
 
@@ -174,9 +134,7 @@ textarea {
   color: var(--azul-900);
 }
 
-/* ==========================================================================
-   TIPOGRAFÍA
-   ========================================================================== */
+/* TIPOGRAFÍA */
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
@@ -227,14 +185,11 @@ p {
   color: var(--text-muted);
 }
 
-/* Números tabulares para datos */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
-/* ==========================================================================
-   BOTONES
-   ========================================================================== */
+/* BOTONES */
 
 .btn {
   display: inline-flex;
@@ -337,9 +292,7 @@ p {
   cursor: not-allowed;
 }
 
-/* ==========================================================================
-   INPUTS / FORMULARIOS
-   ========================================================================== */
+/* INPUTS */
 
 .field {
   display: flex;
@@ -353,8 +306,7 @@ p {
   color: var(--text-primary);
 }
 
-.field .input,
-.field select.input {
+.field .input, .field select.input {
   min-height: 44px;
   padding: 0.6rem 0.9rem;
   border: 1px solid var(--border-strong);
@@ -386,10 +338,6 @@ p {
   min-height: 0;
 }
 
-/* ==========================================================================
-   CARD
-   ========================================================================== */
-
 .card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -403,9 +351,7 @@ p {
   box-shadow: var(--shadow-4);
 }
 
-/* ==========================================================================
-   SIDEBAR / NAV LATERAL
-   ========================================================================== */
+/* SIDEBAR */
 
 .sidebar {
   position: fixed;
@@ -538,12 +484,11 @@ p {
 }
 
 [data-theme="dark"] .nav-link.active {
-  background: rgba(139, 92, 246, 0.2); 
-  color: #a78bfa; 
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
   border-left: 3px solid var(--accent);
 }
 
-/* Sidebar dark mode enhanced */
 [data-theme="dark"] .sidebar {
   background: linear-gradient(180deg, #12101e 0%, #16132a 50%, #1a1533 100%);
   border-right: 1px solid rgba(139, 92, 246, 0.1);
@@ -572,9 +517,7 @@ p {
   gap: 0.5rem;
 }
 
-/* ==========================================================================
-   LAYOUT PRINCIPAL
-   ========================================================================== */
+/* LAYOUT */
 
 .dashboard {
   min-height: 100dvh;
@@ -589,7 +532,6 @@ p {
   transition: background-color 0.25s ease, margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Estado Colapsado del Sidebar en Escritorio */
 .dashboard.sidebar-collapsed .sidebar {
   transform: translateX(-100%) !important;
 }
@@ -598,7 +540,6 @@ p {
   margin-left: 0 !important;
 }
 
-/* Botón Hamburguesa en Topbar */
 .btn-sidebar-toggle {
   display: inline-flex;
   align-items: center;
@@ -627,7 +568,6 @@ p {
   transform: scale(0.96);
 }
 
-/* Botón de colapso dentro del sidebar header */
 .sidebar-collapse-btn {
   display: inline-flex;
   align-items: center;
@@ -650,13 +590,9 @@ p {
 }
 
 [data-theme="dark"] .main-content {
-  background: 
-    radial-gradient(circle at 85% 8%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 98%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    var(--bg-canvas);
+  background: radial-gradient(circle at 85% 8%, rgba(139, 92, 246, 0.12) 0%, transparent 45%), radial-gradient(circle at 50% 98%, rgba(99, 102, 241, 0.08) 0%, transparent 50%), var(--bg-canvas);
 }
 
-/* Header superior */
 .topbar {
   display: flex;
   align-items: flex-start;
@@ -682,7 +618,6 @@ p {
   gap: 0.5rem;
 }
 
-/* Avatar de usuario */
 .user-chip {
   display: flex;
   align-items: center;
@@ -724,9 +659,7 @@ p {
   letter-spacing: 0.03em;
 }
 
-/* ==========================================================================
-   ESTADÍSTICAS (KPI)
-   ========================================================================== */
+/* KPI */
 
 .stats-grid {
   display: grid;
@@ -792,14 +725,27 @@ p {
   line-height: 1.3;
 }
 
-.kpi.verde .kpi-icon { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-.kpi.amarillo .kpi-icon { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-.kpi.azul .kpi-icon { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; } /* Main purple/indigo */
-.kpi.celeste .kpi-icon { background: rgba(59, 130, 246, 0.15); color: #3b82f6; } /* Light blue for family */
+.kpi.verde .kpi-icon {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
 
-/* ==========================================================================
-   BARRA DE BÚSQUEDA Y FILTROS (MOCKUP PURPLE THEME)
-   ========================================================================== */
+.kpi.amarillo .kpi-icon {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.kpi.azul .kpi-icon {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
+}
+
+.kpi.celeste .kpi-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+/* FILTROS */
 
 .filters-bar {
   display: flex;
@@ -882,7 +828,6 @@ p {
   pointer-events: none;
 }
 
-/* Paginación estilo Mockup */
 .pagination-widget {
   display: flex;
   align-items: center;
@@ -924,9 +869,7 @@ p {
   cursor: not-allowed;
 }
 
-/* ==========================================================================
-   TABLAS
-   ========================================================================== */
+/* TABLAS */
 
 .table-wrap {
   overflow-x: auto;
@@ -993,27 +936,42 @@ table.data-table {
   flex-shrink: 0;
 }
 
-.user-table-avatar.admin { background: #8b5cf6; }
-.user-table-avatar.docente { background: #10b981; }
-.user-table-avatar.estudiante { background: #f59e0b; }
-.user-table-avatar.padre { background: #64748b; }
-.user-table-avatar.servicios { background: #3b82f6; }
+.user-table-avatar.admin {
+  background: #8b5cf6;
+}
+
+.user-table-avatar.docente {
+  background: #10b981;
+}
+
+.user-table-avatar.estudiante {
+  background: #f59e0b;
+}
+
+.user-table-avatar.padre {
+  background: #64748b;
+}
+
+.user-table-avatar.servicios {
+  background: #3b82f6;
+}
 
 .user-table-info {
   display: flex;
   flex-direction: column;
 }
+
 .user-table-info strong {
   color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: 600;
 }
+
 .user-table-info span {
   color: var(--text-muted);
   font-size: 0.75rem;
 }
 
-/* Badge de rol */
 .role-badge {
   display: inline-flex;
   align-items: center;
@@ -1025,12 +983,36 @@ table.data-table {
   border: 1px solid transparent;
 }
 
-.role-badge.admin { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
-.role-badge.docente { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
-.role-badge.estudiante { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
-.role-badge.padre { background: rgba(100, 116, 139, 0.15); color: #94a3b8; border-color: rgba(100, 116, 139, 0.3); }
-.role-badge.servicios { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
-/* Badge de estado */
+.role-badge.admin {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.role-badge.docente {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.role-badge.estudiante {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.role-badge.padre {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+.role-badge.servicios {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
 .status-dot {
   display: inline-flex;
   align-items: center;
@@ -1046,9 +1028,10 @@ table.data-table {
   background: currentColor;
 }
 
-.status-dot.activo { color: var(--exito-700); }
+.status-dot.activo {
+  color: var(--exito-700);
+}
 
-/* Badge de nota */
 .nota-badge {
   display: inline-flex;
   padding: 0.2rem 0.55rem;
@@ -1058,14 +1041,25 @@ table.data-table {
   font-variant-numeric: tabular-nums;
 }
 
-.nota-badge.excellent { background: var(--verde-100); color: var(--exito-700); }
-.nota-badge.good { background: var(--azul-100); color: var(--azul-600); }
-.nota-badge.average { background: var(--warning-100); color: var(--warning-700); }
-.nota-badge.poor { background: var(--error-100); color: var(--error-700); }
+.nota-badge.excellent {
+  background: var(--verde-100);
+  color: var(--exito-700);
+}
 
-/* ==========================================================================
-   TABS
-   ========================================================================== */
+.nota-badge.good {
+  background: var(--azul-100);
+  color: var(--azul-600);
+}
+
+.nota-badge.average {
+  background: var(--warning-100);
+  color: var(--warning-700);
+}
+
+.nota-badge.poor {
+  background: var(--error-100);
+  color: var(--error-700);
+}
 
 .tabs {
   display: flex;
@@ -1101,16 +1095,25 @@ table.data-table {
   box-shadow: var(--shadow-2);
 }
 
-/* ==========================================================================
-   SECCIONES DE PANEL
-   ========================================================================== */
+.panel {
+  display: none;
+}
 
-.panel { display: none; }
-.panel.active { display: block; animation: panelSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.panel.active {
+  display: block;
+  animation: panelSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
 @keyframes panelSlideIn {
-  from { opacity: 0; transform: translateY(16px) scale(0.995); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .panel-exit {
@@ -1118,102 +1121,167 @@ table.data-table {
 }
 
 @keyframes panelSlideOut {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(-8px) scale(0.995); }
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.995);
+  }
 }
 
-.admin-tab { display: none; }
-.admin-tab.active { display: block; animation: tabFadeSlide 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.admin-tab {
+  display: none;
+}
+
+.admin-tab.active {
+  display: block;
+  animation: tabFadeSlide 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
 @keyframes tabFadeSlide {
-  from { opacity: 0; transform: translateX(12px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* Stagger animation for list items */
 @keyframes listItemIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .list-item-enter {
   animation: listItemIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Filter bar pulse on change */
 @keyframes filterPulse {
-  0% { box-shadow: 0 0 0 0 var(--accent-soft); }
-  50% { box-shadow: 0 0 0 4px var(--accent-soft); }
-  100% { box-shadow: 0 0 0 0 var(--accent-soft); }
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
 }
 
 .filter-active {
   animation: filterPulse 0.4s ease-out;
 }
 
-/* Sidebar nav item stagger */
 @keyframes navItemIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .nav-item-enter {
   animation: navItemIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Enhanced card hover */
 .card {
   transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
 }
+
 .card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-4);
 }
 
-/* Button press effect */
 .btn {
   transition: transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
+
 .btn:active {
   transform: scale(0.97);
 }
 
-/* Nav link hover enhancement */
 .nav-link {
   transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
+
 .nav-link:hover {
   transform: translateX(3px);
 }
 
-/* Table row hover enhancement */
 table.data-table tbody tr {
   transition: background-color 0.12s ease, transform 0.15s ease;
 }
+
 table.data-table tbody tr:hover {
   transform: scale(1.002);
 }
 
-/* Toast enhanced */
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(30px) scale(0.95); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 @keyframes toastOut {
-  from { opacity: 1; transform: translateX(0) scale(1); }
-  to { opacity: 0; transform: translateX(30px) scale(0.95); }
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
 }
 
-/* Modal enhanced */
 @keyframes modalIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes overlayIn {
-  from { opacity: 0; backdrop-filter: blur(0); }
-  to { opacity: 1; backdrop-filter: blur(4px); }
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
 }
 
 .modal-overlay {
@@ -1224,50 +1292,63 @@ table.data-table tbody tr:hover {
   animation: modalIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* KPI counter animation */
 @keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .kpi-value {
   animation: countUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Badge pop in */
 @keyframes badgePop {
-  from { opacity: 0; transform: scale(0.5); }
-  70% { transform: scale(1.1); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  70% {
+    transform: scale(1.1);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .role-badge, .status-dot {
   animation: badgePop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Pagination button transition */
 .pagination-btn {
   transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .pagination-btn:hover:not(:disabled) {
   transform: translateY(-1px);
 }
+
 .pagination-btn:active:not(:disabled) {
   transform: scale(0.95);
 }
 
-/* Search input focus enhancement */
 .search-input:focus {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Drawer overlay transition */
 #overlayDrawer {
   transition: opacity 0.3s ease;
 }
 
-/* Sidebar desktop transition */
 @media (min-width: 769px) {
   .sidebar {
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
@@ -1287,9 +1368,7 @@ table.data-table tbody tr:hover {
   font-size: 1.15rem;
 }
 
-/* ==========================================================================
-   NOTAS / CARD LIST
-   ========================================================================== */
+/* NOTAS */
 
 .notas-list {
   display: grid;
@@ -1361,14 +1440,27 @@ table.data-table tbody tr:hover {
   letter-spacing: -0.01em;
 }
 
-.promedio.excellent { background: var(--verde-100); color: var(--exito-700); }
-.promedio.good { background: var(--azul-100); color: var(--azul-600); }
-.promedio.average { background: var(--warning-100); color: var(--warning-700); }
-.promedio.poor { background: var(--error-100); color: var(--error-700); }
+.promedio.excellent {
+  background: var(--verde-100);
+  color: var(--exito-700);
+}
 
-/* ==========================================================================
-   HORARIO
-   ========================================================================== */
+.promedio.good {
+  background: var(--azul-100);
+  color: var(--azul-600);
+}
+
+.promedio.average {
+  background: var(--warning-100);
+  color: var(--warning-700);
+}
+
+.promedio.poor {
+  background: var(--error-100);
+  color: var(--error-700);
+}
+
+/* HORARIO */
 
 .horario-grid {
   display: grid;
@@ -1427,9 +1519,7 @@ table.data-table tbody tr:hover {
   padding: 0.4rem;
 }
 
-/* ==========================================================================
-   MODAL
-   ========================================================================== */
+/* MODAL */
 
 .modal-overlay {
   position: fixed;
@@ -1496,9 +1586,7 @@ table.data-table tbody tr:hover {
   flex: 1;
 }
 
-/* ==========================================================================
-   TOAST
-   ========================================================================== */
+/* TOAST */
 
 .toast {
   position: fixed;
@@ -1514,13 +1602,20 @@ table.data-table tbody tr:hover {
   max-width: 90vw;
 }
 
-.toast.success { background: var(--exito-700); color: #fff; }
-.toast.error { background: var(--error-700); color: #fff; }
-.toast.warning { background: var(--warning-700); color: #fff; }
+.toast.success {
+  background: var(--exito-700);
+  color: #fff;
+}
 
-/* ==========================================================================
-   EMPTY & LOADING STATES
-   ========================================================================== */
+.toast.error {
+  background: var(--error-700);
+  color: #fff;
+}
+
+.toast.warning {
+  background: var(--warning-700);
+  color: #fff;
+}
 
 .empty-state {
   padding: 3rem 1.5rem;
@@ -1551,13 +1646,16 @@ table.data-table tbody tr:hover {
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-/* ==========================================================================
-   PÁGINA DE LOGIN (MOCKUP PURPLE SPLIT-CARD THEME)
-   ========================================================================== */
+/* LOGIN */
 
 .login-page-wrap {
   min-height: 100dvh;
@@ -1571,7 +1669,6 @@ table.data-table tbody tr:hover {
   overflow-x: hidden;
 }
 
-/* Cosmic background glow */
 .login-page-wrap::before {
   content: '';
   position: absolute;
@@ -1608,7 +1705,6 @@ table.data-table tbody tr:hover {
   z-index: 2;
 }
 
-/* Lado Izquierdo (Hero / Brand) */
 .login-hero-side {
   padding: 3.5rem 3.25rem;
   display: flex;
@@ -1620,7 +1716,6 @@ table.data-table tbody tr:hover {
   overflow: hidden;
 }
 
-/* Subtle abstract wave curve in background */
 .login-hero-side .hero-wave-bg {
   position: absolute;
   inset: 0;
@@ -1629,7 +1724,6 @@ table.data-table tbody tr:hover {
   z-index: 1;
 }
 
-/* Bottom left dot grid */
 .login-hero-side .dot-grid {
   position: absolute;
   bottom: 2.25rem;
@@ -1730,7 +1824,6 @@ table.data-table tbody tr:hover {
   flex-shrink: 0;
 }
 
-/* Lado Derecho (Formulario) */
 .login-form-side {
   padding: 3.5rem 3.5rem;
   display: flex;
@@ -1889,8 +1982,7 @@ table.data-table tbody tr:hover {
   color: #475569;
 }
 
-.login-form-side .form-split-divider::before,
-.login-form-side .form-split-divider::after {
+.login-form-side .form-split-divider::before, .login-form-side .form-split-divider::after {
   content: '';
   flex: 1;
   height: 1px;
@@ -1942,7 +2034,6 @@ table.data-table tbody tr:hover {
   animation: fadeInUp 0.25s ease-out;
 }
 
-/* Bottom copyright below card */
 .login-footer-copy {
   margin-top: 1.75rem;
   color: #475569;
@@ -1950,7 +2041,6 @@ table.data-table tbody tr:hover {
   text-align: center;
 }
 
-/* Demo credentials accordion */
 .demo-creds-drawer {
   margin-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -2043,15 +2133,16 @@ table.data-table tbody tr:hover {
     grid-template-columns: 1fr;
     max-width: 480px;
   }
+
   .login-hero-side {
     padding: 2.5rem 2rem;
   }
+
   .login-form-side {
     padding: 2.5rem 2rem;
   }
 }
 
-/* Theme toggle en login */
 .theme-toggle-login {
   position: fixed;
   top: 1rem;
@@ -2173,17 +2264,22 @@ table.data-table tbody tr:hover {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .accordion-insavi .accordion-item.visible .accordion-content {
   animation: fadeInUp 0.3s ease-out both;
 }
 
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
+/* RESPONSIVE */
 
 @media (max-width: 1024px) {
   .login-page {
@@ -2278,34 +2374,61 @@ table.data-table tbody tr:hover {
   place-items: center;
 }
 
-/* ==========================================================================
-   UTILIDADES
-   ========================================================================== */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-.stack { display: flex; flex-direction: column; gap: 1rem; }
-.row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
-.row.between { justify-content: space-between; }
-.grow { flex: 1; }
-.mt-1 { margin-top: 0.5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.text-center { text-align: center; }
-.muted { color: var(--text-muted); }
+.row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row.between {
+  justify-content: space-between;
+}
+
+.grow {
+  flex: 1;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.mt-3 {
+  margin-top: 1.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.muted {
+  color: var(--text-muted);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-/* ==========================================================================
-   NUEVO PANEL DOCENTE
-   ========================================================================== */
+/* DOCENTE */
+
 .materia-card-btn {
   display: flex;
   flex-direction: column;
@@ -2320,23 +2443,27 @@ table.data-table tbody tr:hover {
   cursor: pointer;
   box-shadow: var(--shadow-1);
 }
+
 .materia-card-btn:hover {
   border-color: var(--accent);
   background: var(--bg-raised);
   transform: translateX(4px);
 }
+
 .materia-card-btn.active {
   background: var(--accent-soft);
   border-color: var(--accent);
   border-left: 4px solid var(--accent);
   box-shadow: var(--shadow-2);
 }
+
 .materia-card-btn .m-title {
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--text-primary);
   margin-bottom: 0.35rem;
 }
+
 .materia-card-btn .m-sec {
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -2349,20 +2476,22 @@ table.data-table tbody tr:hover {
   }
 }
 
-/* ==========================================================================
-   DOCENTE SUB-PANELS (toggle entre vistas)
-   ========================================================================== */
 .docente-seccion {
   animation: subPanelFadeIn 0.3s ease both;
 }
+
 @keyframes subPanelFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ==========================================================================
-   MEJORAS AL HORARIO (TIMETABLE)
-   ========================================================================== */
 .horario-grid {
   display: grid !important;
   grid-template-columns: repeat(5, 1fr) !important;
@@ -2370,6 +2499,7 @@ table.data-table tbody tr:hover {
   overflow-x: auto;
   padding-bottom: 1rem;
 }
+
 .horario-dia {
   background: var(--bg-surface) !important;
   border: 1px solid var(--border-subtle) !important;
@@ -2378,6 +2508,7 @@ table.data-table tbody tr:hover {
   overflow: hidden;
   min-width: 180px;
 }
+
 .horario-dia-header {
   background: var(--accent) !important;
   color: #fff !important;
@@ -2388,12 +2519,14 @@ table.data-table tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
 .horario-dia-content {
   padding: 1rem !important;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 .horario-clase {
   background: var(--bg-raised) !important;
   border-left: 4px solid var(--accent) !important;
@@ -2402,6 +2535,7 @@ table.data-table tbody tr:hover {
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: transform 0.2s;
 }
+
 .horario-clase:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-2);
@@ -2413,9 +2547,7 @@ table.data-table tbody tr:hover {
   }
 }
 
-/* ==========================================================================
-   ESTILOS DE IMPRESIÓN
-   ========================================================================== */
+/* PRINT */
 
 @media print {
   @page {
@@ -2429,26 +2561,10 @@ table.data-table tbody tr:hover {
     font-size: 11pt;
   }
 
-  /* Ocultar elementos no necesarios */
-  .sidebar,
-  .topbar,
-  .filters-bar,
-  .pagination-widget,
-  .btn,
-  .btn-icon,
-  .form-actions,
-  .toast,
-  .modal-overlay,
-  .sidebar-promo-card,
-  .kpi,
-  .stats-grid,
-  #btnNuevoAdmin,
-  .section-head .btn,
-  .tab-btn {
+  .sidebar, .topbar, .filters-bar, .pagination-widget, .btn, .btn-icon, .form-actions, .toast, .modal-overlay, .sidebar-promo-card, .kpi, .stats-grid, #btnNuevoAdmin, .section-head .btn, .tab-btn {
     display: none !important;
   }
 
-  /* Layout */
   .dashboard {
     display: block !important;
   }
@@ -2459,7 +2575,6 @@ table.data-table tbody tr:hover {
     width: 100% !important;
   }
 
-  /* Header de impresión */
   .print-header {
     display: flex !important;
     align-items: center;
@@ -2500,7 +2615,6 @@ table.data-table tbody tr:hover {
     text-align: right;
   }
 
-  /* Tablas */
   .data-table {
     width: 100% !important;
     border-collapse: collapse !important;
@@ -2536,10 +2650,7 @@ table.data-table tbody tr:hover {
     background: #f9f9f9 !important;
   }
 
-  /* Badges en impresión */
-  .role-badge,
-  .status-dot,
-  .nota-badge {
+  .role-badge, .status-dot, .nota-badge {
     background: #f0f0f0 !important;
     color: #333 !important;
     border: 1px solid #ccc !important;
@@ -2552,7 +2663,6 @@ table.data-table tbody tr:hover {
     background: #333 !important;
   }
 
-  /* Títulos */
   h1, h2, h3, h4 {
     color: #000 !important;
   }
@@ -2567,12 +2677,10 @@ table.data-table tbody tr:hover {
     animation: none !important;
   }
 
-  /* Link de url */
   a[href]::after {
     content: none;
   }
 
-  /* Footer de impresión */
   .print-footer {
     display: block !important;
     margin-top: 2rem;
@@ -2584,15 +2692,11 @@ table.data-table tbody tr:hover {
   }
 }
 
-/* Ocultar elementos de impresión en pantalla */
-.print-header,
-.print-footer {
+.print-header, .print-footer {
   display: none;
 }
 
-/* ==========================================================================
-   DRAG & DROP
-   ========================================================================== */
+/* DRAG */
 
 .draggable {
   cursor: grab;
@@ -2666,13 +2770,14 @@ table.data-table tbody tr.draggable:hover {
 }
 
 @keyframes dropPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
+  0%, 100% {
+    opacity: 0.5;
+  }
 
-/* ==========================================================================
-   INSAVI - PANEL DOCENTE (REDISEÑO ULTRA-MODERNO ALTA FIDELIDAD)
-   ========================================================================== */
+  50% {
+    opacity: 1;
+  }
+}
 
 .docente-kpi-grid {
   display: grid;
@@ -2777,7 +2882,6 @@ table.data-table tbody tr.draggable:hover {
   color: var(--accent);
 }
 
-/* GRID PRINCIPAL: MATERIAS Y CALIFICACIONES */
 .docente-grid-layout {
   display: grid;
   grid-template-columns: 330px 1fr;
@@ -2786,7 +2890,6 @@ table.data-table tbody tr.draggable:hover {
   align-items: start;
 }
 
-/* TARJETA DE MATERIAS (COLUMNA IZQUIERDA) */
 .docente-materias-card {
   background: var(--bg-surface);
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -2940,7 +3043,6 @@ table.data-table tbody tr.draggable:hover {
   color: #c084fc;
 }
 
-/* TARJETA DE CALIFICACIONES (COLUMNA DERECHA) */
 .docente-calificaciones-card {
   background: var(--bg-surface);
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -3022,7 +3124,6 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
 }
 
-/* TABLA DE NOTAS */
 .docente-table-wrap {
   flex: 1;
   overflow-x: auto;
@@ -3124,7 +3225,6 @@ table.data-table tbody tr.draggable:hover {
   background: rgba(20, 20, 36, 0.95);
 }
 
-/* BADGES DE PROMEDIO */
 .docente-prom-badge {
   display: inline-flex;
   align-items: center;
@@ -3170,7 +3270,6 @@ table.data-table tbody tr.draggable:hover {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* BOTONES DE ACCIÓN EN TABLA */
 .docente-actions-group {
   display: flex;
   align-items: center;
@@ -3219,7 +3318,6 @@ table.data-table tbody tr.draggable:hover {
   color: var(--text-primary);
 }
 
-/* FOOTER DE LA TABLA */
 .docente-table-footer {
   padding: 0.95rem 1.5rem;
   background: rgba(14, 14, 26, 0.7);
@@ -3244,7 +3342,6 @@ table.data-table tbody tr.draggable:hover {
   color: var(--text-muted);
 }
 
-/* HORARIO SEMANAL (SECCIÓN INFERIOR) */
 .docente-horario-card {
   background: var(--bg-surface);
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -3435,11 +3532,11 @@ table.data-table tbody tr.draggable:hover {
   color: var(--text-muted);
 }
 
-/* RESPONSIVE DOCENTE PANEL */
 @media (max-width: 1180px) {
   .docente-grid-layout {
     grid-template-columns: 1fr;
   }
+
   .docente-horario-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -3449,12 +3546,12 @@ table.data-table tbody tr.draggable:hover {
   .docente-kpi-grid {
     grid-template-columns: 1fr;
   }
+
   .docente-horario-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* GREETING */
 .greeting {
   font-size: 0.95rem;
   color: #c4b5fd;
@@ -3465,16 +3562,13 @@ table.data-table tbody tr.draggable:hover {
   gap: 0.35rem;
 }
 
-/* TEMA OSCURO EN PANEL DOCENTE */
 [data-theme="dark"] .docente-kpi-card {
   background: rgba(18, 18, 34, 0.85);
   border: 1px solid rgba(139, 92, 246, 0.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="dark"] .docente-materias-card,
-[data-theme="dark"] .docente-calificaciones-card,
-[data-theme="dark"] .docente-horario-card {
+[data-theme="dark"] .docente-materias-card, [data-theme="dark"] .docente-calificaciones-card, [data-theme="dark"] .docente-horario-card {
   background: rgba(18, 18, 34, 0.85);
   border: 1px solid rgba(139, 92, 246, 0.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -3487,15 +3581,12 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
 }
 
-/* ==========================================
-   PANEL ESTUDIANTE (REDISEÑO DE ALTA FIDELIDAD)
-   ========================================== */
+/* ESTUDIANTE */
 
 .estudiante-subseccion {
   animation: fadeInPanel 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Enlaces sutiles tipo botón en cabeceras */
 .est-link-btn {
   background: transparent;
   border: none;
@@ -3517,7 +3608,6 @@ table.data-table tbody tr.draggable:hover {
   transform: translateX(2px);
 }
 
-/* Grid Principal Resumen */
 .estudiante-resumen-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -3531,7 +3621,6 @@ table.data-table tbody tr.draggable:hover {
   }
 }
 
-/* Tarjetas de notas con iconos temáticos (Columna izquierda) */
 .est-notas-list {
   display: flex;
   flex-direction: column;
@@ -3567,7 +3656,6 @@ table.data-table tbody tr.draggable:hover {
   min-width: 0;
 }
 
-/* Iconos de materias temáticos */
 .est-materia-icon {
   width: 40px;
   height: 40px;
@@ -3642,7 +3730,6 @@ table.data-table tbody tr.draggable:hover {
   text-overflow: ellipsis;
 }
 
-/* Cápsulas de Notas (Centro) */
 .est-nota-mid {
   display: flex;
   gap: 0.5rem;
@@ -3675,7 +3762,6 @@ table.data-table tbody tr.draggable:hover {
   margin-top: 0.1rem;
 }
 
-/* Píldora de Promedio (Derecha) */
 .est-nota-right-badge {
   display: flex;
   align-items: center;
@@ -3715,7 +3801,6 @@ table.data-table tbody tr.draggable:hover {
   border: 1px solid var(--border-subtle);
 }
 
-/* Columna de Widgets (Derecha) */
 .est-widgets-col {
   display: flex;
   flex-direction: column;
@@ -3730,7 +3815,6 @@ table.data-table tbody tr.draggable:hover {
   backdrop-filter: blur(12px);
 }
 
-/* Pills de selección de día */
 .est-dia-pills {
   display: flex;
   gap: 0.4rem;
@@ -3764,7 +3848,6 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
 }
 
-/* Lista de Clases del Día */
 .est-horario-hoy-list {
   display: flex;
   flex-direction: column;
@@ -3834,7 +3917,6 @@ table.data-table tbody tr.draggable:hover {
   font-size: 0.82rem;
 }
 
-/* Mini Calendario y Progreso en Fila */
 .est-side-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3889,7 +3971,6 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
-/* Progreso Académico Circular */
 .est-progreso-wrap {
   display: flex;
   flex-direction: column;
@@ -3960,7 +4041,6 @@ table.data-table tbody tr.draggable:hover {
   margin-top: 0.4rem;
 }
 
-/* Fila Inferior (Gráfica de rendimiento + Ranking) */
 .est-bottom-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -3973,7 +4053,6 @@ table.data-table tbody tr.draggable:hover {
   }
 }
 
-/* Gráfica de Períodos */
 .est-chart-container {
   display: flex;
   flex-direction: column;
@@ -4020,7 +4099,6 @@ table.data-table tbody tr.draggable:hover {
   border-radius: 6px;
 }
 
-/* Ranking de Mejores Calificaciones */
 .est-ranking-list {
   display: flex;
   flex-direction: column;
@@ -4068,11 +4146,8 @@ table.data-table tbody tr.draggable:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* ==========================================
-   PANEL PADRE DE FAMILIA REDISEÑADO
-   ========================================== */
+/* PADRE */
 
-/* Preview cards en vista resumen */
 .padre-hijos-preview {
   display: flex;
   flex-direction: column;
@@ -4198,7 +4273,6 @@ table.data-table tbody tr.draggable:hover {
   color: #c084fc;
 }
 
-/* Badge de promedio en header del hijo */
 .padre-promedio-badge {
   display: flex;
   align-items: center;
@@ -4225,7 +4299,6 @@ table.data-table tbody tr.draggable:hover {
   letter-spacing: 0.05em;
 }
 
-/* Avatar en lista lateral de hijos */
 .docente-materia-avatar {
   width: 38px;
   height: 38px;
@@ -4244,7 +4317,6 @@ table.data-table tbody tr.draggable:hover {
   color: #c084fc;
 }
 
-/* Horario 5 días padre */
 .padre-horario-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -4341,7 +4413,6 @@ table.data-table tbody tr.draggable:hover {
   font-size: 0.75rem;
 }
 
-/* Iconos de KPI */
 .docente-kpi-icon.green {
   background: rgba(16, 185, 129, 0.12);
   color: #34d399;
@@ -4352,11 +4423,8 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
 }
 
-/* ==========================================================================
-   INSAVI - TAREAS DIARIAS DE SERVICIOS
-   ========================================================================== */
+/* TAREAS */
 
-/* Badges extra de cargo */
 .role-badge.limpieza {
   background: rgba(14, 165, 233, 0.12);
   color: #0ea5e9;
@@ -4369,7 +4437,6 @@ table.data-table tbody tr.draggable:hover {
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-/* Progreso */
 .servicios-progreso {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -4459,7 +4526,6 @@ table.data-table tbody tr.draggable:hover {
   flex-shrink: 0;
 }
 
-/* Lista de tareas */
 .tareas-lista {
   display: flex;
   flex-direction: column;
@@ -4490,9 +4556,17 @@ table.data-table tbody tr.draggable:hover {
   transition: background-color 0.2s ease;
 }
 
-.tarea--pendiente .tarea-borde { background: var(--warning-700); }
-.tarea--en_progreso .tarea-borde { background: #0ea5e9; }
-.tarea--completada .tarea-borde { background: var(--exito-700); }
+.tarea--pendiente .tarea-borde {
+  background: var(--warning-700);
+}
+
+.tarea--en_progreso .tarea-borde {
+  background: #0ea5e9;
+}
+
+.tarea--completada .tarea-borde {
+  background: var(--exito-700);
+}
 
 .tarea-contenido {
   flex: 1;
@@ -4611,18 +4685,15 @@ table.data-table tbody tr.draggable:hover {
   box-shadow: 0 0 0 4px var(--exito-100);
 }
 
-/* Tarjetas en vista de detalle (admin): sin botones de acción */
 .tarea-card.tarea--detalle .tarea-acciones {
   display: none;
 }
 
-.tarea-card.tarea--completada .tarea-titulo,
-.tarea-card.tarea--completada .tarea-descripcion {
+.tarea-card.tarea--completada .tarea-titulo, .tarea-card.tarea--completada .tarea-descripcion {
   text-decoration: line-through;
   color: var(--text-muted);
 }
 
-/* Lista de trabajadores (admin) */
 .trabajadores-lista {
   display: flex;
   flex-direction: column;
@@ -4674,7 +4745,6 @@ table.data-table tbody tr.draggable:hover {
   transition: width 0.4s ease;
 }
 
-/* Panel de alerta de pendientes */
 .servicios-alerta-panel {
   display: flex;
   align-items: flex-start;
@@ -4697,14 +4767,12 @@ table.data-table tbody tr.draggable:hover {
   margin-top: 0.1rem;
 }
 
-/* Toast informativo */
 .toast.info {
   background: #0ea5e9;
   color: #fff;
   box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
 }
 
-/* Cabecera de sub-vista */
 .servicios-vista-header {
   display: flex;
   justify-content: space-between;
@@ -4746,4 +4814,3 @@ table.data-table tbody tr.draggable:hover {
     justify-content: center;
   }
 }
-

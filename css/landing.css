@@ -1,8 +1,3 @@
-/* ==========================================================================
-   INSAVI - LANDING PAGE INSTITUCIONAL MODERNA & ELEGANTE
-   Instituto Nacional Dr. Sarbelio Navarrete - "Hogar del Águila Verde"
-   ========================================================================== */
-
 :root {
   /* Paleta Institucional */
   --insavi-navy: #091428;
@@ -13,7 +8,7 @@
   --insavi-green-hover: #059669;
   --insavi-gold: #f59e0b;
   --insavi-blue: #2563eb;
-  
+
   /* Neutrales y Fondos */
   --bg-body: #f8fafc;
   --bg-surface: #ffffff;
@@ -22,7 +17,7 @@
   --text-secondary: #475569;
   --text-muted: #94a3b8;
   --border-light: #e2e8f0;
-  
+
   /* Sombras y Efectos */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.08);
@@ -36,7 +31,7 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Modo oscuro opcional */
+/* DARK */
 [data-theme="dark"] {
   --bg-body: #0d1117;
   --bg-surface: #161b22;
@@ -73,9 +68,7 @@ body {
   width: 100%;
 }
 
-/* ==========================================
-   1. NAVBAR INSTITUCIONAL
-   ========================================== */
+/* NAVBAR */
 .topbar-insavi {
   background: rgba(9, 20, 40, 0.94);
   backdrop-filter: blur(14px);
@@ -215,7 +208,6 @@ body {
   transform: translateX(3px);
 }
 
-/* Botón Hamburguesa Móvil */
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -225,9 +217,7 @@ body {
   padding: 0.5rem;
 }
 
-/* ==========================================
-   2. HERO SECTION
-   ========================================== */
+/* HERO */
 .hero-insavi {
   background: radial-gradient(circle at 85% 20%, rgba(124, 58, 237, 0.22) 0%, transparent 50%),
               radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 45%),
@@ -287,9 +277,21 @@ body {
 }
 
 @keyframes pulseAnimation {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #34d399; }
-  100% { transform: scale(0.95); opacity: 0.8; }
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 12px #34d399;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
 }
 
 .hero-insavi h1 {
@@ -373,7 +375,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Imagen Hero con marco moderno */
 .hero-image-wrapper {
   flex: 0.95;
   position: relative;
@@ -436,9 +437,7 @@ body {
   border-left: 3px solid var(--insavi-purple);
 }
 
-/* ==========================================
-   3. STATS BAND (BARRA FLOTANTE ELEVADA)
-   ========================================== */
+/* STATS */
 .stats-floating-band {
   margin-top: -3.5rem;
   position: relative;
@@ -521,9 +520,7 @@ body {
   margin-top: 0.2rem;
 }
 
-/* ==========================================
-   4. SECCIONES COMUNES & TITULOS
-   ========================================== */
+/* SECTIONS */
 .section-padding {
   padding: 5.5rem 0;
 }
@@ -580,9 +577,7 @@ body {
   line-height: 1.6;
 }
 
-/* ==========================================
-   5. NOSOTROS (IDENTIDAD & ORGULLO)
-   ========================================== */
+/* NOSOTROS */
 .split-content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -710,9 +705,7 @@ body {
   color: #ffffff;
 }
 
-/* ==========================================
-   6. MASCOTA OFICIAL (EL ÁGUILA VERDE)
-   ========================================== */
+/* MASCOTA */
 .mascot-section-wrap {
   background: linear-gradient(135deg, #091428 0%, #0d2446 100%);
   color: #ffffff;
@@ -820,9 +813,17 @@ body {
 }
 
 @keyframes rotatePulse {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.08); }
-  100% { transform: rotate(360deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.08);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
 }
 
 .shield-img {
@@ -839,9 +840,7 @@ body {
   transform: scale(1.06) rotate(2deg);
 }
 
-/* ==========================================
-   7. ÁREAS DE FORMACIÓN
-   ========================================== */
+/* ÁREAS DE FORMACIÓN */
 .cards-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -936,9 +935,7 @@ body {
   font-weight: 600;
 }
 
-/* ==========================================
-   8. OFERTA ACADÉMICA / BACHILLERATOS
-   ========================================== */
+/* BACHILLERATOS */
 .academic-grid-6 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -1049,9 +1046,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ==========================================
-   9. GALERÍA INSTITUCIONAL
-   ========================================== */
+/* GALERÍA */
 .gallery-grid-modern {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1105,9 +1100,7 @@ body {
   margin: 0;
 }
 
-/* ==========================================
-   10. BANNER ADMISIÓN Y MATRÍCULA
-   ========================================== */
+/* CTA */
 .cta-admission-banner {
   background: radial-gradient(circle at 10% 50%, rgba(16, 185, 129, 0.2) 0%, transparent 45%),
               linear-gradient(135deg, #091428 0%, #151b3d 100%);
@@ -1148,9 +1141,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ==========================================
-   11. CONTACTO Y UBICACIÓN
-   ========================================== */
+/* CONTACTO */
 .contact-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1220,9 +1211,7 @@ body {
   text-decoration: underline;
 }
 
-/* ==========================================
-   12. FOOTER INSTITUCIONAL
-   ========================================== */
+/* FOOTER */
 .footer-insavi {
   background: #060d1a;
   color: rgba(255, 255, 255, 0.7);
@@ -1313,61 +1302,74 @@ body {
   color: #ffffff;
 }
 
-/* ==========================================
-   13. RESPONSIVE DESIGN
-   ========================================== */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   .hero-container {
     flex-direction: column;
     text-align: center;
     gap: 3.5rem;
   }
+
   .hero-content {
     max-width: 100%;
   }
+
   .hero-insavi .hero-motto {
     justify-content: center;
   }
+
   .hero-actions {
     justify-content: center;
   }
+
   .floating-hero-badge.badge-top-left {
     left: 10px;
   }
+
   .floating-hero-badge.badge-bottom-right {
     right: 10px;
   }
+
   .stats-grid-card {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
   }
+
   .stat-item:nth-child(2) {
     border-right: none;
   }
+
   .split-content-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+
   .mascot-grid {
     grid-template-columns: 1fr;
     text-align: center;
   }
+
   .mascot-pillars {
     grid-template-columns: 1fr;
   }
+
   .cards-grid-3 {
     grid-template-columns: 1fr;
   }
+
   .gallery-grid-modern {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .cta-admission-banner {
     flex-direction: column;
     text-align: center;
   }
+
   .contact-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .footer-container {
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
@@ -1378,9 +1380,11 @@ body {
   .topbar-container {
     height: 72px;
   }
+
   .mobile-menu-toggle {
     display: block;
   }
+
   .nav-list {
     display: none;
     position: absolute;
@@ -1393,37 +1397,47 @@ body {
     gap: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
+
   .nav-list.mobile-open {
     display: flex;
   }
+
   .hero-insavi h1 {
     font-size: 2.5rem;
   }
+
   .stats-grid-card {
     grid-template-columns: 1fr;
     padding: 1.5rem;
   }
+
   .stat-item {
     border-right: none !important;
     border-bottom: 1px solid var(--border-light);
     padding-bottom: 1rem;
   }
+
   .stat-item:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
+
   .mv-grid {
     grid-template-columns: 1fr;
   }
+
   .gallery-grid-modern {
     grid-template-columns: 1fr;
   }
+
   .contact-cards-grid {
     grid-template-columns: 1fr;
   }
+
   .footer-container {
     grid-template-columns: 1fr;
   }
+
   .footer-bottom-bar {
     flex-direction: column;
     gap: 1rem;

@@ -1,27 +1,10 @@
-/**
- * INSAVI - Sistema de Autenticación
- * Login, logout y control de sesiones por rol
- */
-
 const Auth = {
-  // ==========================================
-  // LOGIN
-  // ==========================================
-
   login(email, password) {
     const usuario = DB.getUsuarioByEmail(email);
 
-    if (!usuario) {
-      return { success: false, message: 'Usuario no encontrado' };
-    }
-
-    if (usuario.password !== password) {
-      return { success: false, message: 'Contraseña incorrecta' };
-    }
-
-    if (!usuario.activo) {
-      return { success: false, message: 'Usuario desactivado' };
-    }
+    if (!usuario) return { success: false, message: 'Usuario no encontrado' };
+    if (usuario.password !== password) return { success: false, message: 'Contraseña incorrecta' };
+    if (!usuario.activo) return { success: false, message: 'Usuario desactivado' };
 
     DB.setSession(usuario);
 
@@ -37,18 +20,10 @@ const Auth = {
     };
   },
 
-  // ==========================================
-  // LOGOUT
-  // ==========================================
-
   logout() {
     DB.clearSession();
     window.location.href = 'index.html';
   },
-
-  // ==========================================
-  // VERIFICACIÓN DE SESIÓN
-  // ==========================================
 
   requireAuth(allowedRoles = []) {
     const session = DB.getSession();
@@ -67,10 +42,6 @@ const Auth = {
     return true;
   },
 
-  // ==========================================
-  // REDIRECT POR ROL
-  // ==========================================
-
   getDashboardUrl(rol) {
     const urls = {
       'admin': 'dashboard.html?view=admin',
@@ -81,10 +52,6 @@ const Auth = {
     };
     return urls[rol] || 'dashboard.html';
   },
-
-  // ==========================================
-  // INFO DE SESIÓN
-  // ==========================================
 
   getUserInitials(nombre) {
     if (!nombre) return '?';
@@ -106,10 +73,6 @@ const Auth = {
     return badges[rol] || { text: rol, badgeClass: 'padre' };
   }
 };
-
-// ==========================================
-// INICIALIZACIÓN DEL LOGIN
-// ==========================================
 
 const LOGIN_BUTTON_LABEL = 'Ingresar al portal →';
 const LOGIN_BUTTON_BUSY = 'Ingresando...';
@@ -148,7 +111,6 @@ function initLoginForm() {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
-    // Validaciones básicas
     if (!email && !password) {
       showError('Por favor completa todos los campos');
       return;
@@ -164,17 +126,14 @@ function initLoginForm() {
       return;
     }
 
-    // Deshabilitar botón durante proceso
     submitBtn.disabled = true;
     submitBtn.textContent = LOGIN_BUTTON_BUSY;
     hideError();
 
-    // Intentar login
     const result = Auth.login(email, password);
 
     if (result.success) {
       showLoginSuccess(submitBtn);
-      // Redirigir al dashboard
       window.setTimeout(() => {
         window.location.href = Auth.getDashboardUrl(result.user.rol);
       }, 350);
@@ -185,7 +144,6 @@ function initLoginForm() {
     }
   });
 
-  // Limpiar el error al escribir
   emailInput.addEventListener('input', hideError);
   passwordInput.addEventListener('input', hideError);
 }
@@ -196,7 +154,6 @@ function showLoginSuccess(btn) {
   btn.classList.remove('btn-primary');
 }
 
-// Auto-inicializar si estamos en la página de login
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('loginForm')) {
     initLoginForm();

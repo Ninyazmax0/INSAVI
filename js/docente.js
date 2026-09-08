@@ -1,27 +1,14 @@
-/**
- * INSAVI - Panel de Docente (Rediseño de Alta Fidelidad)
- * Gestión interactiva de notas, materias y horario semanal
- */
-
 const Docente = {
   materiaActiva: null,
-
-  // ==========================================
-  // INICIALIZACIÓN
-  // ==========================================
 
   init() {
     const user = DB.getCurrentUser();
     if (!user) return;
-
     this.cargarEstadisticas(user.id);
     this.cargarMateriasGrid(user.id);
     this.cargarHorario(user.id);
   },
 
-  // ==========================================
-  // ESTADÍSTICAS (KPIs)
-  // ==========================================
 
   cargarEstadisticas(docenteId) {
     const materias = DB.getMateriasByDocente(docenteId);
@@ -42,10 +29,6 @@ const Docente = {
     const elNotas = document.getElementById('statNotasIngresadas');
     if (elNotas) elNotas.textContent = notas.length;
   },
-
-  // ==========================================
-  // GRID DE MATERIAS (COLUMNA IZQUIERDA)
-  // ==========================================
 
   getMateriaIconInfo(nombre) {
     const n = (nombre || '').toLowerCase();
@@ -70,7 +53,7 @@ const Docente = {
   cargarMateriasGrid(docenteId) {
     const materias = DB.getMateriasByDocente(docenteId);
     const container = document.getElementById('listaMateriasCards');
-    
+
     if (!container) return;
     container.innerHTML = '';
 
@@ -83,7 +66,7 @@ const Docente = {
       const seccion = DB.getSeccionById(m.seccion_id);
       const secNombre = seccion ? seccion.nombre : 'Sin sección';
       const iconInfo = this.getMateriaIconInfo(m.nombre);
-      
+
       container.innerHTML += `
         <button class="docente-materia-btn" id="btn-mat-${m.id}" onclick="Docente.seleccionarMateria('${m.id}', '${m.nombre}', '${secNombre}')">
           <div class="docente-materia-badge ${iconInfo.colorClass}">
@@ -100,7 +83,6 @@ const Docente = {
       `;
     });
 
-    // Auto-selección inicial: Seleccionar Matemática II (mat_011) o la primera materia
     if (!this.materiaActiva) {
       const targetMateria = materias.find(m => m.id === 'mat_011') || materias[0];
       if (targetMateria) {
@@ -109,31 +91,23 @@ const Docente = {
         this.seleccionarMateria(targetMateria.id, targetMateria.nombre, secNombre);
       }
     } else {
-      // Re-marcar el activo
       const btn = document.getElementById(`btn-mat-${this.materiaActiva}`);
       if (btn) btn.classList.add('active');
     }
   },
 
-  // ==========================================
-  // SELECCIÓN DE MATERIA Y CALIFICACIONES
-  // ==========================================
-
   seleccionarMateria(materiaId, nombre, seccionNombre) {
     this.materiaActiva = materiaId;
-    
-    // UI Update (botones materias)
+
     document.querySelectorAll('.docente-materia-btn').forEach(btn => btn.classList.remove('active'));
     const btnActivo = document.getElementById(`btn-mat-${materiaId}`);
     if (btnActivo) btnActivo.classList.add('active');
-    
-    // Alternar paneles de notas
+
     const panelVacio = document.getElementById('panelNotasVacio');
     if (panelVacio) panelVacio.style.display = 'none';
     const panelActivo = document.getElementById('panelNotasActivo');
     if (panelActivo) panelActivo.style.display = 'flex';
-    
-    // Actualizar icono de cabecera según la materia
+
     const iconInfo = this.getMateriaIconInfo(nombre);
     const iconoHeader = document.getElementById('iconoMateriaActiva');
     if (iconoHeader) {
@@ -141,13 +115,12 @@ const Docente = {
       iconoHeader.className = `docente-calif-symbol ${iconInfo.colorClass}`;
     }
 
-    // Títulos de cabecera
     const elTitulo = document.getElementById('tituloMateriaActiva');
     if (elTitulo) elTitulo.textContent = nombre;
 
     const elSubtitulo = document.getElementById('subtituloSeccionActiva');
     if (elSubtitulo) elSubtitulo.textContent = `Sección: ${seccionNombre}`;
-    
+
     this.renderTablaEstudiantes(materiaId, seccionNombre);
   },
 
@@ -155,15 +128,15 @@ const Docente = {
     const tbody = document.querySelector('#tablaNotasNuevas tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
-    
+
     const estudiantes = DB.getUsuariosByRol('estudiante').filter(u => u.seccion === seccionNombre);
-    
+
     if (estudiantes.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 3.5rem; color: var(--text-muted); font-size: 0.95rem;">No hay estudiantes registrados en la sección <b>${seccionNombre}</b>.</td></tr>`;
       this.actualizarResumenFooter(0, 0, 0);
       return;
     }
-    
+
     let aprobados = 0;
     let reprobados = 0;
 
@@ -172,7 +145,7 @@ const Docente = {
       const n1 = notaEx && notaEx.nota1 !== undefined ? notaEx.nota1 : '';
       const n2 = notaEx && notaEx.nota2 !== undefined ? notaEx.nota2 : '';
       const n3 = notaEx && notaEx.nota3 !== undefined ? notaEx.nota3 : '';
-      
+
       let promFormatted = '-';
       let promClass = 'prom-none';
 
@@ -262,10 +235,6 @@ const Docente = {
     }
   },
 
-  // ==========================================
-  // GUARDAR NOTA
-  // ==========================================
-
   guardarNuevaNota(estudianteId, materiaId, notaId) {
     const input1 = document.getElementById(`new_n1_${estudianteId}`);
     const input2 = document.getElementById(`new_n2_${estudianteId}`);
@@ -296,20 +265,14 @@ const Docente = {
 
     const materia = DB.getMateriaById(materiaId);
     const seccion = DB.getSeccionById(materia.seccion_id);
-    
-    // Refrescar tabla
+
     this.renderTablaEstudiantes(materiaId, seccion.nombre);
 
-    // Refrescar KPIs
     const user = DB.getCurrentUser();
     this.cargarEstadisticas(user.id);
 
     showToast('Calificación guardada correctamente', 'success');
   },
-
-  // ==========================================
-  // HORARIO SEMANAL (SECCIÓN INFERIOR)
-  // ==========================================
 
   cargarHorario(docenteId) {
     const horarios = DB.getHorariosByDocente(docenteId);
@@ -327,7 +290,6 @@ const Docente = {
     const iconCalendarSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.35rem;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
     const iconUserSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.35rem;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
 
-    // Paleta de acentos para tarjetas de clases
     const barColors = ['#10b981', '#f59e0b', '#38bdf8', '#8b5cf6', '#ec4899'];
     const timeColors = ['#34d399', '#fbbf24', '#38bdf8', '#a78bfa', '#f472b6'];
 
@@ -335,7 +297,7 @@ const Docente = {
       <div class="docente-horario-grid">
         ${dias.map(d => {
           const clasesDia = horarios.filter(h => h.dia.toLowerCase() === d.nombre.toLowerCase());
-          
+
           let diaHtml = `
             <div class="docente-dia-col">
               <div class="docente-dia-banner ${d.classBanner}">
@@ -386,14 +348,10 @@ const Docente = {
     `;
   },
 
-  // ==========================================
-  // MODALES Y UTILIDADES
-  // ==========================================
-
   verPerfilEstudiante(id) {
     const u = DB.getUsuarioById(id);
     if (!u) return;
-    
+
     const notas = DB.getNotas().filter(n => n.estudiante_id === id);
     const html = `
       <div style="font-size: 0.95rem; line-height: 1.6;">
@@ -451,7 +409,7 @@ const Docente = {
               </tr>
             </thead>
             <tbody>
-              ${horarios.length === 0 ? '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">Sin clases registradas</td></tr>' : 
+              ${horarios.length === 0 ? '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">Sin clases registradas</td></tr>' :
                 horarios.sort((a,b) => dias.indexOf(a.dia) - dias.indexOf(b.dia)).map(h => {
                   const mat = DB.getMateriaById(h.materia_id);
                   const sec = mat ? DB.getSeccionById(mat.seccion_id) : null;

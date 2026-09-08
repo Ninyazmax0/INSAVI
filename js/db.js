@@ -1,13 +1,4 @@
-/**
- * INSAVI - Capa de Base de Datos (localStorage)
- * Operaciones CRUD para el sistema escolar
- */
-
 const DB = {
-  // ==========================================
-  // UTILIDADES GENERALES
-  // ==========================================
-  
   generateId(prefix = 'item') {
     return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   },
@@ -32,10 +23,6 @@ const DB = {
     }
   },
 
-  // ==========================================
-  // USUARIOS
-  // ==========================================
-  
   getUsuarios() {
     return this.get('insavi_usuarios');
   },
@@ -68,7 +55,7 @@ const DB = {
     const usuarios = this.getUsuarios();
     const idx = usuarios.findIndex(u => u.id === id);
     if (idx === -1) return null;
-    
+
     usuarios[idx] = { ...usuarios[idx], ...datos };
     this.set('insavi_usuarios', usuarios);
     return usuarios[idx];
@@ -80,10 +67,6 @@ const DB = {
     return true;
   },
 
-  // ==========================================
-  // SECCIONES
-  // ==========================================
-  
   getSecciones() {
     return this.get('insavi_secciones');
   },
@@ -107,7 +90,7 @@ const DB = {
     const secciones = this.getSecciones();
     const idx = secciones.findIndex(s => s.id === id);
     if (idx === -1) return null;
-    
+
     secciones[idx] = { ...secciones[idx], ...datos };
     this.set('insavi_secciones', secciones);
     return secciones[idx];
@@ -119,10 +102,6 @@ const DB = {
     return true;
   },
 
-  // ==========================================
-  // MATERIAS
-  // ==========================================
-  
   getMaterias() {
     return this.get('insavi_materias');
   },
@@ -154,7 +133,7 @@ const DB = {
     const materias = this.getMaterias();
     const idx = materias.findIndex(m => m.id === id);
     if (idx === -1) return null;
-    
+
     materias[idx] = { ...materias[idx], ...datos };
     this.set('insavi_materias', materias);
     return materias[idx];
@@ -166,10 +145,6 @@ const DB = {
     return true;
   },
 
-  // ==========================================
-  // HORARIOS
-  // ==========================================
-  
   getHorarios() {
     return this.get('insavi_horarios');
   },
@@ -205,7 +180,7 @@ const DB = {
     const horarios = this.getHorarios();
     const idx = horarios.findIndex(h => h.id === id);
     if (idx === -1) return null;
-    
+
     horarios[idx] = { ...horarios[idx], ...datos };
     this.set('insavi_horarios', horarios);
     return horarios[idx];
@@ -217,10 +192,6 @@ const DB = {
     return true;
   },
 
-  // ==========================================
-  // NOTAS
-  // ==========================================
-  
   getNotas() {
     return this.get('insavi_notas');
   },
@@ -240,7 +211,7 @@ const DB = {
   getNotasByEstudianteYSeccion(estudianteId, seccionId) {
     const materias = this.getMateriasBySeccion(seccionId);
     const materiaIds = materias.map(m => m.id);
-    return this.getNotas().filter(n => 
+    return this.getNotas().filter(n =>
       n.estudiante_id === estudianteId && materiaIds.includes(n.materia_id)
     );
   },
@@ -254,22 +225,22 @@ const DB = {
   getPromedioGeneral(estudianteId) {
     const notas = this.getNotasByEstudiante(estudianteId);
     if (notas.length === 0) return 0;
-    
+
     const total = notas.reduce((sum, nota) => {
       return sum + parseFloat(this.calcularPromedio(nota));
     }, 0);
-    
+
     return (total / notas.length).toFixed(2);
   },
 
   getPromedioPorMateria(materiaId) {
     const notas = this.getNotasByMateria(materiaId);
     if (notas.length === 0) return 0;
-    
+
     const total = notas.reduce((sum, nota) => {
       return sum + parseFloat(this.calcularPromedio(nota));
     }, 0);
-    
+
     return (total / notas.length).toFixed(2);
   },
 
@@ -288,7 +259,7 @@ const DB = {
     const notas = this.getNotas();
     const idx = notas.findIndex(n => n.id === id);
     if (idx === -1) return null;
-    
+
     notas[idx] = { ...notas[idx], ...datos };
     this.set('insavi_notas', notas);
     return notas[idx];
@@ -299,10 +270,6 @@ const DB = {
     this.set('insavi_notas', notas);
     return true;
   },
-
-  // ==========================================
-  // TAREAS DIARIAS DE SERVICIOS
-  // ==========================================
 
   getFechaHoy() {
     const d = new Date();
@@ -328,7 +295,6 @@ const DB = {
     return this.set(this.getFechaKey(fecha), tareas);
   },
 
-  // Mapea el cargo libre del usuario al cargo de las plantillas
   obtenerCargoKey(usuario) {
     if (!usuario || !usuario.cargo) return null;
     const cargo = usuario.cargo.toLowerCase();
@@ -397,10 +363,6 @@ const DB = {
     return this.generarTareasDelDia(fecha);
   },
 
-  // ==========================================
-  // SESIÓN
-  // ==========================================
-  
   setSession(user) {
     localStorage.setItem('insavi_session', JSON.stringify({
       user_id: user.id,
@@ -437,7 +399,6 @@ const DB = {
   }
 };
 
-// Auto-cargar datos iniciales si no existen
 if (typeof INSAVI_SEED !== 'undefined') {
   cargarDatosIniciales();
 }

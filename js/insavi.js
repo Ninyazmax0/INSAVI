@@ -1,12 +1,4 @@
-/**
- * INSAVI - Interactividad de la Landing Page
- * Instituto Nacional Dr. Sarbelio Navarrete
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // ==========================================
-  // 1. MENÚ MÓVIL TOGGLE
-  // ==========================================
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mainNavList = document.getElementById('mainNavList');
 
@@ -15,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
       mainNavList.classList.toggle('mobile-open');
     });
 
-    // Cerrar el menú al hacer clic en cualquier enlace
     mainNavList.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         mainNavList.classList.remove('mobile-open');
@@ -23,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 2. SCROLL SUAVE PARA ENLACES ANCLA
-  // ==========================================
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const targetId = this.getAttribute('href');
@@ -46,9 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ==========================================
-  // 3. SCROLLSPY (DESTACAR SECCIÓN ACTIVA EN NAVBAR)
-  // ==========================================
   const navLinks = document.querySelectorAll('.nav-list .nav-link');
   const sections = document.querySelectorAll('section[id]');
 
@@ -77,9 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', updateActiveSection, { passive: true });
   updateActiveSection();
 
-  // ==========================================
-  // 4. ANIMACIÓN AL HACER SCROLL (INTERSECTION OBSERVER)
-  // ==========================================
   const animatedElements = document.querySelectorAll(
     '.stat-item, .mv-card, .feature-card, .academic-card, .gallery-card, .contact-card-box'
   );
@@ -101,14 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     animatedElements.forEach((el, index) => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
-      el.style.transition = `opacity 0.5s ease ${ (index % 4) * 0.1 }s, transform 0.5s cubic-bezier(0.2, 0, 0, 1) ${ (index % 4) * 0.1 }s`;
+      el.style.transition = `opacity 0.5s ease ${(index % 4) * 0.1}s, transform 0.5s cubic-bezier(0.2, 0, 0, 1) ${(index % 4) * 0.1}s`;
       observer.observe(el);
     });
   }
 
-  // ==========================================
-  // 5. EFECTO DE ELEVACIÓN NAVBAR EN SCROLL
-  // ==========================================
   const topbar = document.querySelector('.topbar-insavi');
   if (topbar) {
     window.addEventListener('scroll', () => {

@@ -1,11 +1,3 @@
-/**
- * INSAVI - Panel de Servicios Varios
- * Sistema de tareas diarias (tickets) por cargo:
- *  - Limpieza, Mantenimiento y Seguridad
- *  - El trabajador marca el estado: pendiente / en progreso / completada
- *  - El estado se guarda en localStorage por día
- */
-
 const Servicios = {
   init() {
     const user = DB.getCurrentUser();
@@ -14,7 +6,6 @@ const Servicios = {
     this.user = user;
     this.fecha = DB.getFechaHoy();
 
-    // Generar los tickets del día si aún no existen
     DB.generarTareasDelDia(this.fecha);
 
     if (user.rol === 'servicios') {
@@ -23,10 +14,6 @@ const Servicios = {
       this.mostrarVista('directorio');
     }
   },
-
-  // ==========================================
-  // SUB-PANELS (toggle entre vistas)
-  // ==========================================
 
   mostrarVista(view) {
     const secciones = {
@@ -48,10 +35,6 @@ const Servicios = {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
-
-  // ==========================================
-  // MIS TAREAS DEL DÍA
-  // ==========================================
 
   cargarTareas() {
     const container = document.getElementById('serviciosTareas');
@@ -176,10 +159,6 @@ const Servicios = {
     return d.toLocaleDateString('es-SV', { weekday: 'long', day: 'numeric', month: 'long' });
   },
 
-  // ==========================================
-  // DIRECTORIO
-  // ==========================================
-
   cargarDirectorio() {
     const container = document.getElementById('directorioServicios');
     if (!container) return;
@@ -204,10 +183,6 @@ const Servicios = {
     `).join('');
   },
 
-  // ==========================================
-  // HORARIO GENERAL
-  // ==========================================
-
   cargarHorarioGeneral() {
     const container = document.getElementById('horarioServicios');
     if (!container) return;
@@ -224,7 +199,6 @@ const Servicios = {
       <div class="horario-grid">
         ${dias.map(dia => {
           const horariosDia = horarios.filter(h => h.dia === dia);
-          // Sort by time
           horariosDia.sort((a, b) => a.hora_inicio.localeCompare(b.hora_inicio));
 
           return `

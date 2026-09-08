@@ -1,8 +1,3 @@
-/**
- * INSAVI - Dashboard Principal
- * Coordinador de paneles según rol de usuario
- */
-
 let currentView = 'dashboard';
 
 const SVG = {
@@ -17,9 +12,6 @@ const SVG = {
   clipboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12l2 2 4-4"/></svg>'
 };
 
-// ==========================================
-// INICIALIZACIÓN PRINCIPAL
-// ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!DB.isLoggedIn()) {
@@ -48,9 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
   showPanel(view, user);
 });
 
-// ==========================================
-// CONFIGURACIÓN DE UI
-// ==========================================
 
 function setupUserUI(user) {
   const avatar = document.getElementById('userAvatar');
@@ -85,13 +74,10 @@ function setupUserUI(user) {
   }
 }
 
-// ==========================================
-// MOSTRAR PANEL SEGÚN ROL
-// ==========================================
 
 function showPanel(view, user) {
   const currentPanel = document.querySelector('.panel.active');
-  
+
   if (currentPanel) {
     currentPanel.classList.add('panel-exit');
     setTimeout(() => {
@@ -104,7 +90,6 @@ function showPanel(view, user) {
 }
 
 function activatePanel(view, user) {
-  // Resetear tabs admin
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
@@ -156,7 +141,6 @@ function activatePanel(view, user) {
     }
   }
 
-  // Inicializar módulo según vista
   if (view === 'admin') {
     Admin.init();
     showAdminTab('usuarios');
@@ -176,7 +160,6 @@ function activatePanel(view, user) {
   const activeLink = document.querySelector(`.sidebar-nav .nav-link[data-view="${view}"]`);
   if (activeLink) activeLink.classList.add('active');
 
-  // Ocultar elementos exclusivos de admin si no estamos en admin
   const btnNuevo = document.getElementById('btnNuevoAdmin');
   if (view !== 'admin') {
     if (btnNuevo) btnNuevo.style.display = 'none';
@@ -191,9 +174,6 @@ function activatePanel(view, user) {
   currentView = view;
 }
 
-// ==========================================
-// GENERAR MENÚ LATERAL
-// ==========================================
 
 function generateSidebarNav(rol) {
   const nav = document.getElementById('sidebarNav');
@@ -293,7 +273,6 @@ function generateSidebarNav(rol) {
 
   nav.innerHTML = html;
 
-  // Animación stagger para items del sidebar
   const navItems = nav.querySelectorAll('.nav-link, .nav-section');
   navItems.forEach((item, i) => {
     item.classList.add('nav-item-enter');
@@ -301,9 +280,6 @@ function generateSidebarNav(rol) {
   });
 }
 
-// ==========================================
-// TABS DE ADMINISTRACIÓN
-// ==========================================
 
 function showAdminTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -311,7 +287,6 @@ function showAdminTab(tab) {
   const tabElement = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
   if (tabElement) tabElement.classList.add('active');
 
-  // Update Sidebar active state!
   document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
   const btn = document.querySelector(`.sidebar-nav .nav-link[data-admin-tab="${tab}"]`);
   if (btn) btn.classList.add('active');
@@ -320,18 +295,43 @@ function showAdminTab(tab) {
   const subtitle = document.getElementById('pageSubtitle');
 
   const titles = {
-    'usuarios': { title: 'Gestión de usuarios', sub: 'Administra los usuarios del sistema académico.', btnText: 'Nuevo usuario', action: 'usuario' },
-    'secciones': { title: 'Gestión de secciones', sub: 'Administra las secciones y sus capacidades.', btnText: 'Nueva sección', action: 'seccion' },
-    'materias': { title: 'Gestión de materias', sub: 'Asigna materias a secciones y docentes.', btnText: 'Nueva materia', action: 'materia' },
-    'horarios': { title: 'Gestión de horarios', sub: 'Configura los horarios de clases.', btnText: 'Nuevo horario', action: 'horario' },
-    'servicios': { title: 'Control de servicios', sub: 'Resumen de las tareas diarias del personal de mantenimiento y vigilancia.', btnText: '', action: '' }
+    'usuarios': {
+      title: 'Gestión de usuarios',
+      sub: 'Administra los usuarios del sistema académico.',
+      btnText: 'Nuevo usuario',
+      action: 'usuario'
+    },
+    'secciones': {
+      title: 'Gestión de secciones',
+      sub: 'Administra las secciones y sus capacidades.',
+      btnText: 'Nueva sección',
+      action: 'seccion'
+    },
+    'materias': {
+      title: 'Gestión de materias',
+      sub: 'Asigna materias a secciones y docentes.',
+      btnText: 'Nueva materia',
+      action: 'materia'
+    },
+    'horarios': {
+      title: 'Gestión de horarios',
+      sub: 'Configura los horarios de clases.',
+      btnText: 'Nuevo horario',
+      action: 'horario'
+    },
+    'servicios': {
+      title: 'Control de servicios',
+      sub: 'Resumen de las tareas diarias del personal de mantenimiento y vigilancia.',
+      btnText: '',
+      action: ''
+    }
   };
 
   const config = titles[tab] || titles['usuarios'];
-  
+
   document.getElementById('pageTitle').textContent = config.title;
   if (subtitle) subtitle.textContent = config.sub;
-  
+
   if (btnNuevo) {
     if (config.btnText) {
       btnNuevo.innerHTML = `
@@ -348,7 +348,6 @@ function showAdminTab(tab) {
     }
   }
 
-  // Botón de imprimir
   const btnImprimir = document.getElementById('btnImprimir');
   if (btnImprimir) {
     const printActions = {
@@ -365,7 +364,6 @@ function showAdminTab(tab) {
     }
   }
 
-  // Refrescar la vista correspondiente
   switch (tab) {
     case 'usuarios': Admin.cargarEstadisticas(); Admin.cargarUsuarios(); break;
     case 'secciones': Admin.cargarSecciones(); break;
@@ -375,9 +373,6 @@ function showAdminTab(tab) {
   }
 }
 
-// ==========================================
-// SUB-PANELS DOCENTE (toggle entre vistas)
-// ==========================================
 
 function showDocenteSubPanel(view) {
   const secciones = {
@@ -386,7 +381,6 @@ function showDocenteSubPanel(view) {
     horario: document.getElementById('docenteSeccionHorario')
   };
 
-  // Resumen muestra todo, notas solo notas, horario solo horario
   if (view === 'resumen') {
     Object.values(secciones).forEach(s => { if (s) s.style.display = ''; });
   } else if (view === 'notas') {
@@ -397,18 +391,13 @@ function showDocenteSubPanel(view) {
     if (secciones.horario) secciones.horario.style.display = '';
   }
 
-  // Update sidebar active state
   document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
   const btn = document.querySelector(`.sidebar-nav .nav-link[data-docente-view="${view}"]`);
   if (btn) btn.classList.add('active');
 
-  // Scroll to top of panel
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ==========================================
-// SUB-PANELS ESTUDIANTE (toggle entre vistas)
-// ==========================================
 
 function showEstudianteSubPanel(view) {
   const secciones = {
@@ -442,7 +431,6 @@ function showEstudianteSubPanel(view) {
     Estudiante.cargarHorarioCompleto();
   }
 
-  // Update sidebar active state
   document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
   const btn = document.querySelector(`.sidebar-nav .nav-link[data-estudiante-view="${view}"]`);
   if (btn) btn.classList.add('active');
@@ -450,9 +438,7 @@ function showEstudianteSubPanel(view) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ==========================================
-// SUB-PANELS PADRE (toggle entre vistas)
-// ==========================================
+
 function showPadreSubPanel(view) {
   const vistaResumen = document.getElementById('padreVistaResumen');
   const vistaDetalle = document.getElementById('padreVistaDetalle');
@@ -472,7 +458,6 @@ function showPadreSubPanel(view) {
     Padre.mostrarVistaHijos();
   }
 
-  // Update sidebar active state
   document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
   const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="${view}"]`);
   if (btn) btn.classList.add('active');
@@ -480,15 +465,21 @@ function showPadreSubPanel(view) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ==========================================
-// SUB-PANELS SERVICIOS (toggle entre vistas)
-// ==========================================
 
 function showServiciosSubPanel(view) {
   const titles = {
-    tareas: { title: 'Mis tareas del día', sub: 'Tickets de tareas diarias asignados a tu cargo.' },
-    directorio: { title: 'Directorio del personal', sub: 'Personal activo del instituto.' },
-    horario: { title: 'Horario general del instituto', sub: 'Distribución oficial de clases por día.' }
+    tareas: {
+      title: 'Mis tareas del día',
+      sub: 'Tickets de tareas diarias asignados a tu cargo.'
+    },
+    directorio: {
+      title: 'Directorio del personal',
+      sub: 'Personal activo del instituto.'
+    },
+    horario: {
+      title: 'Horario general del instituto',
+      sub: 'Distribución oficial de clases por día.'
+    }
   };
 
   if (Servicios && titles[view]) {
@@ -499,9 +490,6 @@ function showServiciosSubPanel(view) {
   }
 }
 
-// ==========================================
-// CONTROL DEL MENÚ LATERAL (COLAPSO Y MÓVIL)
-// ==========================================
 
 function toggleSidebarCollapse() {
   const dash = document.querySelector('.dashboard');
@@ -541,9 +529,6 @@ function closeSidebar() {
   document.getElementById('overlayDrawer').classList.remove('open');
 }
 
-// ==========================================
-// MODO OSCURO / CLARO
-// ==========================================
 
 function initTheme() {
   const savedTheme = localStorage.getItem('theme');
@@ -576,9 +561,6 @@ function updateThemeButton(isDark) {
   if (text) text.textContent = isDark ? 'Modo claro' : 'Modo oscuro';
 }
 
-// ==========================================
-// EVENTOS GLOBALES
-// ==========================================
 
 document.getElementById('mobileMenuBtn')?.addEventListener('click', toggleSidebar);
 document.getElementById('overlayDrawer')?.addEventListener('click', closeSidebar);

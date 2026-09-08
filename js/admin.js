@@ -1,12 +1,4 @@
-/**
- * INSAVI - Panel de Administrador
- * CRUD de usuarios, secciones, materias y horarios
- */
-
 const Admin = {
-  // ==========================================
-  // INICIALIZACIÓN
-  // ==========================================
 
   init() {
     this.currentPageUsuarios = 1;
@@ -22,12 +14,7 @@ const Admin = {
     this.populateFilterDropdowns();
   },
 
-  // ==========================================
-  // POBLAR DROPDOWN DE FILTROS
-  // ==========================================
-
   populateFilterDropdowns() {
-    // Secciones dropdown for Materias filter
     const filterSeccionMat = document.getElementById('filterSeccionMat');
     if (filterSeccionMat) {
       const secciones = DB.getSecciones();
@@ -35,7 +22,6 @@ const Admin = {
         secciones.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
     }
 
-    // Docentes dropdown for Materias filter
     const filterDocenteMat = document.getElementById('filterDocenteMat');
     if (filterDocenteMat) {
       const docentes = DB.getUsuariosByRol('docente');
@@ -44,7 +30,6 @@ const Admin = {
         docentes.map(d => `<option value="${d.id}">${d.nombre}</option>`).join('');
     }
 
-    // Secciones dropdown for Horarios filter
     const filterSeccionHor = document.getElementById('filterSeccionHor');
     if (filterSeccionHor) {
       const secciones = DB.getSecciones();
@@ -53,29 +38,23 @@ const Admin = {
     }
   },
 
-  // ==========================================
-  // ESTADÍSTICAS
-  // ==========================================
-
   cargarEstadisticas() {
     const el = (id) => document.getElementById(id);
     const usuarios = DB.getUsuarios();
-    
+
     el('statUsuarios').textContent = usuarios.length;
-    
+
     const docentes = usuarios.filter(u => u.rol === 'docente').length;
     if (el('statDocentesKpi')) el('statDocentesKpi').textContent = docentes;
-    
+
     const estudiantes = usuarios.filter(u => u.rol === 'estudiante').length;
     if (el('statEstudiantesKpi')) el('statEstudiantesKpi').textContent = estudiantes;
-    
+
     const padres = usuarios.filter(u => u.rol === 'padre').length;
     if (el('statPadresKpi')) el('statPadresKpi').textContent = padres;
   },
 
-  // ==========================================
-  // USUARIOS
-  // ==========================================
+
 
   filtrarUsuarios() {
     const term = (document.getElementById('searchUsuarios')?.value || '').toLowerCase();
@@ -85,7 +64,7 @@ const Admin = {
     let usuarios = DB.getUsuarios();
 
     if (term) {
-      usuarios = usuarios.filter(u => 
+      usuarios = usuarios.filter(u =>
         u.nombre.toLowerCase().includes(term) ||
         u.email.toLowerCase().includes(term) ||
         u.rol.toLowerCase().includes(term)
@@ -178,7 +157,6 @@ const Admin = {
       `;
     }).join('');
 
-    // Stagger animation para filas
     const rows = tbody.querySelectorAll('tr');
     rows.forEach((row, i) => {
       row.classList.add('list-item-enter');
@@ -326,9 +304,7 @@ const Admin = {
     }
   },
 
-  // ==========================================
-  // SECCIONES
-  // ==========================================
+
 
   filtrarSecciones() {
     const term = (document.getElementById('searchSecciones')?.value || '').toLowerCase();
@@ -398,14 +374,12 @@ const Admin = {
       `;
     }).join('');
 
-    // Stagger animation para filas
     const rows = tbody.querySelectorAll('tr');
     rows.forEach((row, i) => {
       row.classList.add('list-item-enter');
       row.style.animationDelay = `${i * 0.03}s`;
     });
 
-    // Paginación
     if (paginationEl) {
       if (totalPages <= 1) {
         paginationEl.innerHTML = '';
@@ -482,9 +456,7 @@ const Admin = {
     }
   },
 
-  // ==========================================
-  // MATERIAS
-  // ==========================================
+
 
   filtrarMaterias() {
     const term = (document.getElementById('searchMaterias')?.value || '').toLowerCase();
@@ -559,14 +531,12 @@ const Admin = {
       `;
     }).join('');
 
-    // Stagger animation para filas
     const rows = tbody.querySelectorAll('tr');
     rows.forEach((row, i) => {
       row.classList.add('list-item-enter');
       row.style.animationDelay = `${i * 0.03}s`;
     });
 
-    // Paginación
     if (paginationEl) {
       if (totalPages <= 1) {
         paginationEl.innerHTML = '';
@@ -652,9 +622,7 @@ const Admin = {
     }
   },
 
-  // ==========================================
-  // HORARIOS
-  // ==========================================
+
 
   filtrarHorarios() {
     const term = (document.getElementById('searchHorarios')?.value || '').toLowerCase();
@@ -742,17 +710,14 @@ const Admin = {
       `;
     }).join('');
 
-    // Stagger animation para filas
     const rows = tbody.querySelectorAll('tr');
     rows.forEach((row, i) => {
       row.classList.add('list-item-enter');
       row.style.animationDelay = `${i * 0.03}s`;
     });
 
-    // Drag & Drop para horarios
     this.initDragAndDrop(todos);
 
-    // Paginación
     if (paginationEl) {
       if (totalPages <= 1) {
         paginationEl.innerHTML = '';
@@ -775,9 +740,7 @@ const Admin = {
     this.cargarHorarios();
   },
 
-  // ==========================================
-  // DRAG & DROP PARA HORARIOS
-  // ==========================================
+
 
   initDragAndDrop(horarios) {
     const tbody = document.querySelector('#tablaHorarios tbody');
@@ -815,28 +778,24 @@ const Admin = {
       row.addEventListener('drop', (e) => {
         e.preventDefault();
         row.classList.remove('drag-over');
-        
+
         const fromId = e.dataTransfer.getData('text/plain');
         const toId = row.dataset.id;
-        
+
         if (fromId === toId) return;
 
-        // Reordenar en la base de datos
         const allHorarios = DB.getHorarios();
         const fromIndex = allHorarios.findIndex(h => h.id === fromId);
         const toIndex = allHorarios.findIndex(h => h.id === toId);
 
         if (fromIndex === -1 || toIndex === -1) return;
 
-        // Intercambiar posiciones
         const temp = allHorarios[fromIndex];
         allHorarios[fromIndex] = allHorarios[toIndex];
         allHorarios[toIndex] = temp;
 
-        // Guardar en localStorage
         localStorage.setItem('INSAVI_HORARIOS', JSON.stringify(allHorarios));
 
-        // Recargar vista
         this.currentPageHorarios = 1;
         this._horariosFiltrados = null;
         this.cargarHorarios();
@@ -912,16 +871,14 @@ const Admin = {
     }
   },
 
-  // ==========================================
-  // VISTAS DE DETALLES
-  // ==========================================
+
 
   verDetallesUsuario(id) {
     const u = DB.getUsuarioById(id);
     if(!u) return;
 
     let extraInfo = '';
-    
+
     if (u.rol === 'estudiante') {
       const notas = DB.getNotas().filter(n => n.estudiante_id === id);
       extraInfo = `
@@ -998,7 +955,7 @@ const Admin = {
           <h4 style="margin-bottom: 0.25rem; color: var(--accent);">${s.nombre}</h4>
           <p class="muted">Grado: ${s.grado}°</p>
         </div>
-        
+
         <strong>Materias asignadas (${materias.length}):</strong>
         <ul style="margin-top: 0.5rem; padding-left: 1.25rem; margin-bottom: 1.25rem;">
           ${materias.length === 0 ? '<li>Sin materias</li>' : materias.map(m => {
@@ -1038,9 +995,9 @@ const Admin = {
           <h4 style="margin-bottom: 0.25rem; color: var(--accent);">${m.nombre}</h4>
           <p class="muted">Sección: ${seccion ? seccion.nombre : 'Huérfana'}</p>
         </div>
-        
+
         <p><strong>Docente a cargo:</strong> ${docente ? docente.nombre : '<span class="muted">Sin asignar</span>'}</p>
-        
+
         <strong style="display:block; margin-top: 1rem;">Horarios de clase (${horarios.length}):</strong>
         <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
           ${horarios.length === 0 ? '<li>Sin horarios programados</li>' : horarios.map(h => `<li>${h.dia} de ${h.hora_inicio} a ${h.hora_fin}</li>`).join('')}
@@ -1070,7 +1027,7 @@ const Admin = {
           <h4 style="margin-bottom: 0.25rem; color: var(--accent);">${h.dia}</h4>
           <p class="muted" style="font-size: 1.2rem; font-weight: 600;">${h.hora_inicio} - ${h.hora_fin}</p>
         </div>
-        
+
         <p><strong>Materia:</strong> ${materia ? materia.nombre : 'Borrada'}</p>
         <p><strong>Sección:</strong> ${seccion ? seccion.nombre : '-'}</p>
         <p><strong>Docente:</strong> ${docente ? docente.nombre : '-'}</p>
@@ -1085,9 +1042,7 @@ const Admin = {
     document.getElementById('modalOverlay').classList.add('active');
   },
 
-  // ==========================================
-  // CONTROL DE SERVICIOS (tareas diarias)
-  // ==========================================
+
 
   cargarServicios() {
     const contenedor = document.getElementById('serviciosResumen');
@@ -1105,7 +1060,6 @@ const Admin = {
     const enProgreso = tareas.filter(t => t.estado === 'en_progreso').length;
     const pendientes = tareas.filter(t => t.estado === 'pendiente').length;
 
-    // KPIs del día
     contenedor.innerHTML = `
       <div class="stats-grid">
         <div class="kpi azul">
@@ -1147,7 +1101,6 @@ const Admin = {
       </div>
     `;
 
-    // Trabajadores con progreso
     const trabajadoresHTML = trabajadores.map((t, i) => {
       const tareasTrabajador = tareas.filter(x => x.usuario_id === t.id);
       const hechas = tareasTrabajador.filter(x => x.estado === 'completada').length;
@@ -1291,9 +1244,6 @@ const Admin = {
   }
 };
 
-// ==========================================
-// FUNCIONES GLOBALES PARA CREAR NUEVOS
-// ==========================================
 
 function openModal(tipo) {
   const modalBody = document.getElementById('modalBody');
@@ -1436,9 +1386,6 @@ function openModal(tipo) {
   document.getElementById('modalOverlay').classList.add('active');
 }
 
-// ==========================================
-// FUNCIONES DE CREACIÓN
-// ==========================================
 
 Admin.crearUsuario = function (e) {
   e.preventDefault();
@@ -1514,9 +1461,6 @@ Admin.crearHorario = function (e) {
   showToast('Horario creado', 'success');
 };
 
-// ==========================================
-// TÓGGLES DE CAMPOS SEGÚN ROL
-// ==========================================
 
 function toggleNewUserFields() {
   const rol = document.getElementById('newRol').value;
@@ -1529,16 +1473,13 @@ function toggleEditUserFields() {
   document.getElementById('grupoHijos').style.display = rol === 'padre' ? 'flex' : 'none';
 }
 
-// ==========================================
-// UTILIDADES GLOBALES
-// ==========================================
 
 function closeModal() {
   const overlay = document.getElementById('modalOverlay');
   const modal = overlay.querySelector('.modal');
   if (modal) {
     modal.style.animation = 'none';
-    modal.offsetHeight; // reflow
+    modal.offsetHeight;
     modal.style.animation = '';
   }
   overlay.classList.remove('active');
@@ -1550,7 +1491,7 @@ function showToast(message, type = 'success') {
   toast.className = `toast ${type}`;
   toast.style.display = 'block';
   toast.style.animation = 'none';
-  toast.offsetHeight; // reflow
+  toast.offsetHeight;
   toast.style.animation = 'toastIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) both';
 
   clearTimeout(showToast._timer);
@@ -1562,15 +1503,12 @@ function showToast(message, type = 'success') {
   }, 3200);
 }
 
-// ==========================================
-// FUNCIONES DE IMPRESIÓN
-// ==========================================
 
 function imprimirTabla(titulo, subtitulo, columnas, datos) {
   const fecha = new Date().toLocaleDateString('es-SV', { year: 'numeric', month: 'long', day: 'numeric' });
-  
+
   let tablaHTML = columnas.map(col => `<th>${col}</th>`).join('');
-  let filasHTML = datos.map(fila => 
+  let filasHTML = datos.map(fila =>
     `<tr>${fila.map(celda => `<td>${celda}</td>`).join('')}</tr>`
   ).join('');
 
@@ -1627,7 +1565,7 @@ Admin.imprimirUsuarios = function() {
   const columnas = ['USUARIO', 'CORREO', 'ROL', 'SECCION/HIJOS', 'ESTADO'];
   const datos = usuarios.map(u => {
     let rolLabel = u.rol.charAt(0).toUpperCase() + u.rol.slice(1);
-    let detalle = u.rol === 'estudiante' ? (u.seccion || '-') : 
+    let detalle = u.rol === 'estudiante' ? (u.seccion || '-') :
                   (u.rol === 'padre' ? ((u.hijos?.length || 0) + ' hijos') : '-');
     let estado = u.activo ? 'Activo' : 'Inactivo';
     return [u.nombre, u.email, rolLabel, detalle, estado];

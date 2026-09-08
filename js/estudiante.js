@@ -1,14 +1,5 @@
-/**
- * INSAVI - Panel de Estudiante (Rediseño de Alta Fidelidad)
- * Sub-vistas: Resumen interactivo con widgets, Detalle de notas y Horario semanal
- */
-
 const Estudiante = {
   diaHorarioActivo: 'Lunes',
-
-  // ==========================================
-  // INICIALIZACIÓN
-  // ==========================================
 
   init() {
     const user = DB.getCurrentUser();
@@ -16,8 +7,7 @@ const Estudiante = {
 
     this.cargarEstadisticas(user.id, user.seccion);
     this.cargarNotasResumen(user.id, user.seccion);
-    
-    // Determinar día actual para el horario de hoy
+
     const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const hoyIndex = new Date().getDay();
     const hoyNombre = (hoyIndex >= 1 && hoyIndex <= 5) ? dias[hoyIndex] : 'Lunes';
@@ -25,10 +15,6 @@ const Estudiante = {
 
     this.cargarWidgets(user.id, user.seccion);
   },
-
-  // ==========================================
-  // ICONOS Y COLORES POR MATERIA (SVG)
-  // ==========================================
 
   getMateriaIconInfo(nombre) {
     const n = (nombre || '').toLowerCase();
@@ -86,10 +72,6 @@ const Estudiante = {
     };
   },
 
-  // ==========================================
-  // ESTADÍSTICAS / KPIs
-  // ==========================================
-
   cargarEstadisticas(estudianteId, seccionNombre) {
     const promedio = DB.getPromedioGeneral(estudianteId);
     const elProm = document.getElementById('statPromedioGeneral');
@@ -115,10 +97,6 @@ const Estudiante = {
     const elAprob = document.getElementById('statAprobadas');
     if (elAprob) elAprob.textContent = aprobadas;
   },
-
-  // ==========================================
-  // NOTAS RESUMEN (Filas con iconos y cápsulas)
-  // ==========================================
 
   cargarNotasResumen(estudianteId, seccionNombre) {
     const container = document.getElementById('notasEstudiante');
@@ -186,14 +164,9 @@ const Estudiante = {
     }).join('');
   },
 
-  // ==========================================
-  // HORARIO DE HOY (Widget interactivo)
-  // ==========================================
-
   seleccionarDiaHorario(dia) {
     this.diaHorarioActivo = dia;
-    
-    // Actualizar pills de día
+
     document.querySelectorAll('#estDiaPills .est-dia-pill').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-dia') === dia);
     });
@@ -244,19 +217,13 @@ const Estudiante = {
     }).join('');
   },
 
-  // ==========================================
-  // WIDGETS: Calendario, Progreso y Gráfica
-  // ==========================================
-
   cargarWidgets(estudianteId, seccionNombre) {
-    // 1. Mini Calendario
     const calGrid = document.getElementById('estCalGrid');
     if (calGrid) {
       const diasSemana = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
       let calHtml = diasSemana.map(d => `<div class="est-cal-head">${d}</div>`).join('');
-      
-      // Calendario Septiembre (inicia en Martes, 30 días)
-      const offset = 1; // Martes = índice 1
+
+      const offset = 1;
       for (let i = 0; i < offset; i++) {
         calHtml += `<div class="est-cal-day muted">31</div>`;
       }
@@ -268,7 +235,6 @@ const Estudiante = {
       calGrid.innerHTML = calHtml;
     }
 
-    // 2. Progreso Académico Circular
     const seccion = DB.getSecciones().find(s => s.nombre === seccionNombre);
     const notas = DB.getNotasByEstudiante(estudianteId);
     let totalMaterias = seccion ? DB.getMateriasBySeccion(seccion.id).length : 5;
@@ -289,20 +255,19 @@ const Estudiante = {
     const ringBar = document.getElementById('estRingBar');
     if (ringBar) {
       const radius = 36;
-      const circumference = 2 * Math.PI * radius; // ~226.19
+      const circumference = 2 * Math.PI * radius;
       ringBar.style.strokeDasharray = `${circumference}`;
       const offsetVal = circumference - (circumference * pct) / 100;
       ringBar.style.strokeDashoffset = `${offsetVal}`;
     }
 
-    // 3. Gráfica de Promedios por Período (SVG Curve)
     const chartWrap = document.getElementById('estChartWrap');
     if (chartWrap) {
       const promActual = parseFloat(DB.getPromedioGeneral(estudianteId)) || 8.5;
       const p1 = Math.max(7.0, (promActual - 0.4)).toFixed(1);
       const p2 = Math.max(7.0, (promActual - 0.1)).toFixed(1);
       const p3 = promActual.toFixed(2);
-      
+
       chartWrap.innerHTML = `
         <div class="est-chart-container">
           <svg class="est-chart-svg" viewBox="0 0 460 160" preserveAspectRatio="none">
@@ -312,6 +277,7 @@ const Estudiante = {
                 <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
               </linearGradient>
             </defs>
+
             <!-- Grid lines -->
             <line x1="40" y1="30" x2="440" y2="30" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
             <line x1="40" y1="70" x2="440" y2="70" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
@@ -351,7 +317,6 @@ const Estudiante = {
       `;
     }
 
-    // 4. Ranking de Mejores Calificaciones
     const rankingList = document.getElementById('estRankingList');
     if (rankingList && seccion) {
       const materias = DB.getMateriasBySeccion(seccion.id);
@@ -377,10 +342,6 @@ const Estudiante = {
       `).join('');
     }
   },
-
-  // ==========================================
-  // SUB-VISTA: NOTAS DETALLE COMPLETO
-  // ==========================================
 
   cargarNotasDetalle() {
     const user = DB.getCurrentUser();
@@ -439,10 +400,6 @@ const Estudiante = {
       `;
     }).join('');
   },
-
-  // ==========================================
-  // SUB-VISTA: HORARIO SEMANAL COMPLETO
-  // ==========================================
 
   cargarHorarioCompleto() {
     const user = DB.getCurrentUser();
@@ -506,10 +463,6 @@ const Estudiante = {
       </div>
     `;
   },
-
-  // ==========================================
-  // IMPRESIÓN DE NOTAS
-  // ==========================================
 
   imprimirNotas() {
     const user = DB.getCurrentUser();

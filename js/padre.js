@@ -1,27 +1,14 @@
-/**
- * INSAVI - Panel de Padre de Familia (Rediseño de Alta Fidelidad)
- * Vista resumen familiar (KPIs + previsualización) → Vista detalle (selector de hijos, calificaciones y horario)
- */
-
 const Padre = {
   hijoActivoId: null,
   hijosIds: [],
 
-  // ==========================================
-  // INICIALIZACIÓN
-  // ==========================================
-
   init() {
     const user = DB.getCurrentUser();
     if (!user) return;
-
     this.hijosIds = user.hijos || [];
     this.cargarResumen(this.hijosIds);
   },
 
-  // ==========================================
-  // ICONOS Y COLORES POR MATERIA (SVG)
-  // ==========================================
 
   getMateriaIconInfo(nombre) {
     const n = (nombre || '').toLowerCase();
@@ -61,9 +48,6 @@ const Padre = {
     };
   },
 
-  // ==========================================
-  // VISTA RESUMEN: KPIs + preview cards
-  // ==========================================
 
   cargarResumen(hijosIds) {
     const elHijos = document.getElementById('statTotalHijos');
@@ -75,18 +59,15 @@ const Padre = {
       return;
     }
 
-    // Calcular promedio familiar
     const promedios = hijosIds.map(id => parseFloat(DB.getPromedioGeneral(id))).filter(p => !isNaN(p));
     const promFamilia = promedios.length > 0
       ? (promedios.reduce((a, b) => a + b, 0) / promedios.length).toFixed(2)
       : '-';
     document.getElementById('statPromedioFamilia').textContent = promFamilia;
 
-    // Contar hijos con promedio >= 6
     const aprobados = promedios.filter(p => p >= 6).length;
     document.getElementById('statHijosAprobados').textContent = aprobados;
 
-    // Renderizar preview cards
     this.renderPreviewCards(hijosIds);
   },
 
@@ -127,9 +108,6 @@ const Padre = {
     }).join('');
   },
 
-  // ==========================================
-  // TRANSICIÓN ENTRE VISTAS
-  // ==========================================
 
   mostrarVistaHijos() {
     const vistaResumen = document.getElementById('padreVistaResumen');
@@ -137,14 +115,12 @@ const Padre = {
     if (vistaResumen) vistaResumen.style.display = 'none';
     if (vistaDetalle) vistaDetalle.style.display = 'block';
 
-    // Sidebar active state
     document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
     const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="hijos"]`);
     if (btn) btn.classList.add('active');
 
     this.cargarHijos(this.hijosIds);
 
-    // Auto-seleccionar primer hijo si no hay ninguno activo
     if (!this.hijoActivoId && this.hijosIds.length > 0) {
       this.seleccionarHijo(this.hijosIds[0]);
     } else if (this.hijoActivoId) {
@@ -164,7 +140,6 @@ const Padre = {
     if (vistaDetalle) vistaDetalle.style.display = 'none';
     if (vistaResumen) vistaResumen.style.display = 'block';
 
-    // Sidebar active state
     document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
     const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="resumen"]`);
     if (btn) btn.classList.add('active');
@@ -175,9 +150,6 @@ const Padre = {
     if (sub) sub.textContent = 'Monitorea el avance de tus hijos.';
   },
 
-  // ==========================================
-  // CARGAR HIJOS (lista lateral en vista detalle)
-  // ==========================================
 
   cargarHijos(hijosIds) {
     const container = document.getElementById('listaHijosCards');
@@ -210,9 +182,6 @@ const Padre = {
     cards.forEach(c => c.classList.add('list-item-enter'));
   },
 
-  // ==========================================
-  // SELECCIONAR HIJO
-  // ==========================================
 
   seleccionarHijo(hijoId) {
     this.hijoActivoId = hijoId;
@@ -230,7 +199,6 @@ const Padre = {
     const hijo = DB.getUsuarioById(hijoId);
     if (!hijo) return;
 
-    // Header del perfil del hijo
     const icono = document.getElementById('iconoHijoActivo');
     if (icono) icono.textContent = Auth.getUserInitials(hijo.nombre);
 
@@ -247,9 +215,6 @@ const Padre = {
     this.renderHorario(hijo.seccion);
   },
 
-  // ==========================================
-  // RENDER NOTAS (con iconos y footer)
-  // ==========================================
 
   renderNotas(estudianteId, seccionNombre) {
     const tbody = document.getElementById('notasHijo');
@@ -314,7 +279,6 @@ const Padre = {
       `;
     }).join('');
 
-    // Actualizar texto del footer
     const footerTexto = document.getElementById('resumenHijoTexto');
     if (footerTexto) {
       footerTexto.innerHTML = `
@@ -324,9 +288,6 @@ const Padre = {
     }
   },
 
-  // ==========================================
-  // RENDER HORARIO (5 columnas estilizadas)
-  // ==========================================
 
   renderHorario(seccionNombre) {
     const container = document.getElementById('horarioHijo');
@@ -382,9 +343,6 @@ const Padre = {
     `;
   },
 
-  // ==========================================
-  // UTILIDADES
-  // ==========================================
 
   getNotaClass(promedio) {
     const num = parseFloat(promedio);
@@ -395,4 +353,3 @@ const Padre = {
     return 'poor';
   }
 };
-
