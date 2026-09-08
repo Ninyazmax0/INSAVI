@@ -1083,6 +1083,211 @@ const Admin = {
     document.getElementById('modalTitle').textContent = `Detalles del Horario`;
     document.getElementById('modalBody').innerHTML = html;
     document.getElementById('modalOverlay').classList.add('active');
+  },
+
+  // ==========================================
+  // CONTROL DE SERVICIOS (tareas diarias)
+  // ==========================================
+
+  cargarServicios() {
+    const contenedor = document.getElementById('serviciosResumen');
+    const detalle = document.getElementById('serviciosDetalleTrabajador');
+    if (!contenedor) return;
+
+    detalle.style.display = 'none';
+
+    const fecha = DB.getFechaHoy();
+    DB.generarTareasDelDia(fecha);
+    const tareas = DB.getTareasDiarias(fecha);
+    const trabajadores = DB.getUsuariosByRol('servicios').filter(u => u.activo);
+
+    const completadas = tareas.filter(t => t.estado === 'completada').length;
+    const enProgreso = tareas.filter(t => t.estado === 'en_progreso').length;
+    const pendientes = tareas.filter(t => t.estado === 'pendiente').length;
+
+    // KPIs del día
+    contenedor.innerHTML = `
+      <div class="stats-grid">
+        <div class="kpi azul">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value tnum">${tareas.length}</div>
+            <div class="kpi-label">Tareas programadas hoy</div>
+          </div>
+        </div>
+        <div class="kpi verde">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value tnum">${completadas}</div>
+            <div class="kpi-label">Completadas</div>
+          </div>
+        </div>
+        <div class="kpi celeste">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value tnum">${enProgreso}</div>
+            <div class="kpi-label">En progreso</div>
+          </div>
+        </div>
+        <div class="kpi amarillo">
+          <div class="kpi-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-value tnum">${pendientes}</div>
+            <div class="kpi-label">Sin atender</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Trabajadores con progreso
+    const trabajadoresHTML = trabajadores.map((t, i) => {
+      const tareasTrabajador = tareas.filter(x => x.usuario_id === t.id);
+      const hechas = tareasTrabajador.filter(x => x.estado === 'completada').length;
+      const enProgresoCount = tareasTrabajador.filter(x => x.estado === 'en_progreso').length;
+      const pct = tareasTrabajador.length > 0 ? Math.round((hechas / tareasTrabajador.length) * 100) : 0;
+
+      const cargoLabel = DB.obtenerCargoKey(t) || '-';
+      const badgeCls = {
+        mantenimiento: 'servicios',
+        limpieza: 'limpieza',
+        seguridad: 'seguridad'
+      };
+      const badge = `<span class="role-badge ${badgeCls[cargoLabel] || 'servicios'}">${this.cargoLabel(cargoLabel)}</span>`;
+
+      return `
+        <div class="trabajador-row servicios-trabajador-enter" style="animation-delay: ${i * 0.04}s">
+          <div class="trabajador-info">
+            <div class="user-table-avatar">${Auth.getUserInitials(t.nombre)}</div>
+            <div>
+              <strong>${t.nombre}</strong>
+              <span class="muted" style="font-size: 0.8rem;">${t.cargo}</span>
+            </div>
+          </div>
+          <div class="trabajador-progreso-caja">
+            <div class="trabajador-progreso">
+              <div class="trabajador-progreso-fill" style="width: ${pct}%"></div>
+            </div>
+            <span class="tnum">${hechas}/${tareasTrabajador.length} completadas</span>
+          </div>
+          ${badge}
+          <button class="btn btn-ghost btn-sm" onclick="Admin.verDetalleServicio('${t.id}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Ver detalle
+          </button>
+        </div>
+      `;
+    }).join('');
+
+    const sinTareasPendientes = tareas.filter(t => t.estado === 'pendiente').length;
+
+    contenedor.innerHTML += `
+      <h3 class="mt-4 mb-2">Progreso del personal</h3>
+      <div class="trabajadores-lista">
+        ${trabajadoresHTML || '<p class="muted">No hay personal de servicios activo.</p>'}
+      </div>
+
+      <div class="servicios-alerta-panel mt-4 ${sinTareasPendientes === 0 ? 'servicios-alerta-ok' : ''}">
+        <div class="servicios-alerta-icon">
+          ${sinTareasPendientes === 0
+            ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+            : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'}
+        </div>
+        <div>
+          <strong>${sinTareasPendientes === 0 ? 'Todo al día' : `${sinTareasPendientes} tareas pendientes de atender`}</strong>
+          <p class="muted" style="font-size: 0.85rem; margin-top: 0.25rem;">${sinTareasPendientes === 0 ? 'Todas las tareas programadas para hoy fueron completadas.' : 'Hay tickets sin iniciar. Se marcan automáticamente cada día desde las plantillas.'}</p>
+        </div>
+      </div>
+    `;
+  },
+
+  cargoLabel(key) {
+    const labels = {
+      mantenimiento: 'Mantenimiento',
+      limpieza: 'Limpieza',
+      seguridad: 'Seguridad'
+    };
+    return labels[key] || 'Servicios';
+  },
+
+  verDetalleServicio(usuarioId) {
+    const usuario = DB.getUsuarioById(usuarioId);
+    if (!usuario) return;
+
+    const fecha = DB.getFechaHoy();
+    const tareas = DB.getTareasDelUsuario(usuarioId, fecha);
+    const completadas = tareas.filter(t => t.estado === 'completada').length;
+    const pct = tareas.length > 0 ? Math.round((completadas / tareas.length) * 100) : 0;
+
+    const resumen = document.getElementById('serviciosResumen');
+    const detalle = document.getElementById('serviciosDetalleTrabajador');
+    resumen.style.display = 'none';
+    detalle.style.display = '';
+
+    detalle.innerHTML = `
+      <div class="section-head mb-2">
+        <div>
+          <h3>${usuario.nombre}</h3>
+          <p class="muted" style="font-size: 0.9rem;">${usuario.cargo}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="Admin.cerrarDetalleServicio()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Volver al resumen
+        </button>
+      </div>
+
+      <div class="servicios-progreso mb-2">
+        <div class="servicios-progreso-info">
+          <span class="servicios-fecha">Avance de hoy</span>
+          <span class="servicios-progreso-valor">${completadas}/${tareas.length} completadas</span>
+        </div>
+        <div class="servicios-progreso-bar">
+          <div class="servicios-progreso-fill" style="width: ${pct}%"></div>
+        </div>
+      </div>
+
+      <div class="tareas-lista">
+        ${tareas.length === 0 ? '<p class="muted">Este trabajador no tiene tareas asignadas hoy.</p>' : tareas.map((t, i) => {
+          const etiquetas = {
+            pendiente: { text: 'Pendiente', cls: 'estado-pendiente' },
+            en_progreso: { text: 'En progreso', cls: 'estado-progreso' },
+            completada: { text: 'Completada', cls: 'estado-completada' }
+          };
+          const et = etiquetas[t.estado] || etiquetas.pendiente;
+          return `
+            <div class="tarea-card tarea--${t.estado}" style="animation-delay: ${i * 0.04}s">
+              <div class="tarea-borde"></div>
+              <div class="tarea-contenido">
+                <div class="tarea-top">
+                  <h4 class="tarea-titulo">${t.titulo}</h4>
+                  <span class="tarea-estado ${et.cls}">${et.text}</span>
+                </div>
+                <p class="tarea-descripcion">${t.descripcion}</p>
+                <div class="tarea-meta">
+                  <span class="badge-turno ${t.turno}">${t.turno === 'manana' ? 'Turno mañana' : 'Turno tarde'}</span>
+                  ${t.actualizada_en ? `<span class="muted" style="font-size: 0.75rem;">Última actualización: ${new Date(t.actualizada_en).toLocaleTimeString('es-SV', { hour: '2-digit', minute: '2-digit' })}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  },
+
+  cerrarDetalleServicio() {
+    const resumen = document.getElementById('serviciosResumen');
+    const detalle = document.getElementById('serviciosDetalleTrabajador');
+    resumen.style.display = '';
+    detalle.style.display = 'none';
+    this.cargarServicios();
   }
 };
 

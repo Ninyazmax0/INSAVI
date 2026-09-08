@@ -13,7 +13,8 @@ const SVG = {
   clock: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
   pencil: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
   family: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  chart: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'
+  chart: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  clipboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12l2 2 4-4"/></svg>'
 };
 
 // ==========================================
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupUserUI(user);
   initTheme();
+  initSidebarState();
 
   const urlParams = new URLSearchParams(window.location.search);
   let view = urlParams.get('view');
@@ -52,7 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupUserUI(user) {
   const avatar = document.getElementById('userAvatar');
-  avatar.textContent = Auth.getUserInitials(user.nombre);
+  if (user.rol === 'docente') {
+    avatar.textContent = 'PL';
+    avatar.style.background = 'rgba(16, 185, 129, 0.18)';
+    avatar.style.color = '#34d399';
+    avatar.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+  } else {
+    avatar.textContent = Auth.getUserInitials(user.nombre);
+    avatar.style.background = '';
+    avatar.style.color = '';
+    avatar.style.border = '';
+  }
 
   document.getElementById('userName').textContent = user.nombre;
   document.getElementById('userRole').textContent = Auth.getRolBadge(user.rol).text;
@@ -64,7 +76,13 @@ function setupUserUI(user) {
   if (hour < 12) saludo = 'Buenos días';
   else if (hour < 19) saludo = 'Buenas tardes';
   else saludo = 'Buenas noches';
-  greeting.textContent = `${saludo}, ${user.nombre.split(' ')[0]}`;
+
+  if (user.rol === 'docente') {
+    const isProfa = user.nombre.startsWith('Profa.');
+    greeting.textContent = `${saludo}, ${isProfa ? 'Profa.' : 'Prof.'}`;
+  } else {
+    greeting.textContent = `${saludo}, ${user.nombre.split(' ')[0]}`;
+  }
 }
 
 // ==========================================
@@ -101,10 +119,19 @@ function activatePanel(view, user) {
   };
 
   const titleMap = {
+    admin: 'Gestión de usuarios',
     docente: 'Panel docente',
     estudiante: 'Mi rendimiento académico',
     padre: 'Panel de familia',
-    servicios: 'Servicios Generales'
+    servicios: 'Mis tareas del día'
+  };
+
+  const subtitleMap = {
+    admin: 'Administra los usuarios del sistema académico.',
+    docente: 'Aquí puedes ver un resumen de tu actividad académica y gestionar tus clases.',
+    estudiante: 'Consulta tus materias, notas y horario.',
+    padre: 'Monitorea el avance de tus hijos.',
+    servicios: 'Tickets de tareas diarias asignados a tu cargo.'
   };
 
   const panelId = panelMap[view];
@@ -119,16 +146,29 @@ function activatePanel(view, user) {
     document.getElementById('pageTitle').textContent = titleMap[view];
   }
 
+  const subtitle = document.getElementById('pageSubtitle');
+  if (subtitle) {
+    if (subtitleMap[view]) {
+      subtitle.textContent = subtitleMap[view];
+      subtitle.style.display = 'block';
+    } else {
+      subtitle.style.display = 'none';
+    }
+  }
+
   // Inicializar módulo según vista
   if (view === 'admin') {
     Admin.init();
     showAdminTab('usuarios');
   } else if (view === 'docente') {
     Docente.init();
+    showDocenteSubPanel('resumen');
   } else if (view === 'estudiante') {
     Estudiante.init();
+    showEstudianteSubPanel('resumen');
   } else if (view === 'padre') {
     Padre.init();
+    showPadreSubPanel('resumen');
   } else if (view === 'servicios') {
     Servicios.init();
   }
@@ -138,15 +178,16 @@ function activatePanel(view, user) {
 
   // Ocultar elementos exclusivos de admin si no estamos en admin
   const btnNuevo = document.getElementById('btnNuevoAdmin');
-  const subtitle = document.getElementById('pageSubtitle');
   if (view !== 'admin') {
     if (btnNuevo) btnNuevo.style.display = 'none';
-    if (subtitle) subtitle.style.display = 'none';
-  } else {
-    if (subtitle) subtitle.style.display = 'block';
   }
 
-  document.getElementById('pageTitle').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const illust = document.querySelector('.header-illustration');
+  if (illust) {
+    illust.style.display = view === 'admin' ? 'block' : 'none';
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   currentView = view;
 }
 
@@ -173,6 +214,10 @@ function generateSidebarNav(rol) {
       <button class="nav-link" data-admin-tab="horarios" onclick="showAdminTab('horarios'); return false;">
         <span class="nav-icon">${SVG.clock}</span> Horarios
       </button>
+      <div class="nav-section">Operativo</div>
+      <button class="nav-link" data-admin-tab="servicios" onclick="showAdminTab('servicios'); return false;">
+        <span class="nav-icon">${SVG.clipboard}</span> Servicios
+      </button>
     `;
   } else if (rol === 'docente') {
     html = `
@@ -189,42 +234,59 @@ function generateSidebarNav(rol) {
       </button>
       <div class="nav-section" style="margin-top: auto;">Próximos eventos</div>
       <div style="padding: 0.5rem 0.75rem;">
-        <div style="background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem;">
-          <strong style="color: var(--accent); display: block; margin-bottom: 0.25rem;">Reunión General</strong>
-          <span style="color: var(--text-muted);">Viernes, 14:00 - Auditorio</span>
+        <div style="background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; display: flex; gap: 0.65rem; align-items: flex-start;">
+          <div style="color: var(--accent); margin-top: 0.1rem; flex-shrink: 0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div>
+            <strong style="color: var(--accent); display: block; margin-bottom: 0.25rem;">Reunión General</strong>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Viernes, 14:00 - Auditorio</span>
+          </div>
         </div>
       </div>
     `;
   } else if (rol === 'estudiante') {
     html = `
       <div class="nav-section">General</div>
-      <button class="nav-link active" data-view="estudiante" onclick="showPanel('estudiante', DB.getCurrentUser()); return false;">
+      <button class="nav-link active" data-estudiante-view="resumen" onclick="showEstudianteSubPanel('resumen'); return false;">
         <span class="nav-icon">${SVG.home}</span> Resumen
       </button>
       <div class="nav-section">Académico</div>
-      <button class="nav-link" data-view="estudiante" onclick="showPanel('estudiante', DB.getCurrentUser()); return false;">
+      <button class="nav-link" data-estudiante-view="notas" onclick="showEstudianteSubPanel('notas'); return false;">
         <span class="nav-icon">${SVG.chart}</span> Mis notas
       </button>
-      <button class="nav-link" data-view="estudiante" onclick="showPanel('estudiante', DB.getCurrentUser()); return false;">
+      <button class="nav-link" data-estudiante-view="horario" onclick="showEstudianteSubPanel('horario'); return false;">
         <span class="nav-icon">${SVG.clock}</span> Mi horario
       </button>
     `;
   } else if (rol === 'padre') {
     html = `
       <div class="nav-section">General</div>
-      <button class="nav-link active" data-view="padre" onclick="showPanel('padre', DB.getCurrentUser()); return false;">
+      <button class="nav-link active" data-padre-view="resumen" onclick="showPadreSubPanel('resumen'); return false;">
         <span class="nav-icon">${SVG.home}</span> Resumen
       </button>
       <div class="nav-section">Seguimiento</div>
-      <button class="nav-link" data-view="padre" onclick="showPanel('padre', DB.getCurrentUser()); return false;">
+      <button class="nav-link" data-padre-view="hijos" onclick="showPadreSubPanel('hijos'); return false;">
         <span class="nav-icon">${SVG.family}</span> Mis hijos
       </button>
     `;
   } else if (rol === 'servicios') {
     html = `
       <div class="nav-section">General</div>
-      <button class="nav-link active" data-view="servicios" onclick="showPanel('servicios', DB.getCurrentUser()); return false;">
-        <span class="nav-icon">${SVG.building}</span> Panel de Servicios
+      <button class="nav-link active" data-servicios-view="tareas" onclick="showServiciosSubPanel('tareas'); return false;">
+        <span class="nav-icon">${SVG.clipboard}</span> Mis tareas del día
+      </button>
+      <div class="nav-section">Consulta</div>
+      <button class="nav-link" data-servicios-view="directorio" onclick="showServiciosSubPanel('directorio'); return false;">
+        <span class="nav-icon">${SVG.users}</span> Directorio
+      </button>
+      <button class="nav-link" data-servicios-view="horario" onclick="showServiciosSubPanel('horario'); return false;">
+        <span class="nav-icon">${SVG.clock}</span> Horario general
       </button>
     `;
   }
@@ -261,7 +323,8 @@ function showAdminTab(tab) {
     'usuarios': { title: 'Gestión de usuarios', sub: 'Administra los usuarios del sistema académico.', btnText: 'Nuevo usuario', action: 'usuario' },
     'secciones': { title: 'Gestión de secciones', sub: 'Administra las secciones y sus capacidades.', btnText: 'Nueva sección', action: 'seccion' },
     'materias': { title: 'Gestión de materias', sub: 'Asigna materias a secciones y docentes.', btnText: 'Nueva materia', action: 'materia' },
-    'horarios': { title: 'Gestión de horarios', sub: 'Configura los horarios de clases.', btnText: 'Nuevo horario', action: 'horario' }
+    'horarios': { title: 'Gestión de horarios', sub: 'Configura los horarios de clases.', btnText: 'Nuevo horario', action: 'horario' },
+    'servicios': { title: 'Control de servicios', sub: 'Resumen de las tareas diarias del personal de mantenimiento y vigilancia.', btnText: '', action: '' }
   };
 
   const config = titles[tab] || titles['usuarios'];
@@ -270,15 +333,19 @@ function showAdminTab(tab) {
   if (subtitle) subtitle.textContent = config.sub;
   
   if (btnNuevo) {
-    btnNuevo.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <line x1="12" y1="5" x2="12" y2="19"/>
-        <line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      ${config.btnText}
-    `;
-    btnNuevo.onclick = () => openModal(config.action);
-    btnNuevo.style.display = 'inline-flex';
+    if (config.btnText) {
+      btnNuevo.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        ${config.btnText}
+      `;
+      btnNuevo.onclick = () => openModal(config.action);
+      btnNuevo.style.display = 'inline-flex';
+    } else {
+      btnNuevo.style.display = 'none';
+    }
   }
 
   // Botón de imprimir
@@ -304,6 +371,7 @@ function showAdminTab(tab) {
     case 'secciones': Admin.cargarSecciones(); break;
     case 'materias': Admin.cargarMaterias(); break;
     case 'horarios': Admin.cargarHorarios(); break;
+    case 'servicios': Admin.cargarServicios(); break;
   }
 }
 
@@ -339,8 +407,121 @@ function showDocenteSubPanel(view) {
 }
 
 // ==========================================
-// DRAWER MÓVIL
+// SUB-PANELS ESTUDIANTE (toggle entre vistas)
 // ==========================================
+
+function showEstudianteSubPanel(view) {
+  const secciones = {
+    resumen: document.getElementById('estudianteSeccionResumen'),
+    notas: document.getElementById('estudianteSeccionNotas'),
+    horario: document.getElementById('estudianteSeccionHorario')
+  };
+
+  if (view === 'resumen') {
+    if (secciones.resumen) secciones.resumen.style.display = '';
+    if (secciones.notas) secciones.notas.style.display = 'none';
+    if (secciones.horario) secciones.horario.style.display = 'none';
+    document.getElementById('pageTitle').textContent = 'Mi rendimiento académico';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Consulta tus materias, notas y horario.';
+  } else if (view === 'notas') {
+    if (secciones.resumen) secciones.resumen.style.display = 'none';
+    if (secciones.notas) secciones.notas.style.display = '';
+    if (secciones.horario) secciones.horario.style.display = 'none';
+    document.getElementById('pageTitle').textContent = 'Mis calificaciones';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Registro detallado de tus notas por materia y período.';
+    Estudiante.cargarNotasDetalle();
+  } else if (view === 'horario') {
+    if (secciones.resumen) secciones.resumen.style.display = 'none';
+    if (secciones.notas) secciones.notas.style.display = 'none';
+    if (secciones.horario) secciones.horario.style.display = '';
+    document.getElementById('pageTitle').textContent = 'Mi horario semanal';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Distribución oficial de clases para tu sección.';
+    Estudiante.cargarHorarioCompleto();
+  }
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
+  const btn = document.querySelector(`.sidebar-nav .nav-link[data-estudiante-view="${view}"]`);
+  if (btn) btn.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
+// SUB-PANELS PADRE (toggle entre vistas)
+// ==========================================
+function showPadreSubPanel(view) {
+  const vistaResumen = document.getElementById('padreVistaResumen');
+  const vistaDetalle = document.getElementById('padreVistaDetalle');
+
+  if (view === 'resumen') {
+    if (vistaResumen) vistaResumen.style.display = '';
+    if (vistaDetalle) vistaDetalle.style.display = 'none';
+    document.getElementById('pageTitle').textContent = 'Panel de familia';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Monitorea el avance de tus hijos.';
+  } else if (view === 'hijos') {
+    if (vistaResumen) vistaResumen.style.display = 'none';
+    if (vistaDetalle) vistaDetalle.style.display = '';
+    document.getElementById('pageTitle').textContent = 'Seguimiento de estudiantes';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Consulta detallada de calificaciones y horarios.';
+    Padre.mostrarVistaHijos();
+  }
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
+  const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="${view}"]`);
+  if (btn) btn.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
+// SUB-PANELS SERVICIOS (toggle entre vistas)
+// ==========================================
+
+function showServiciosSubPanel(view) {
+  const titles = {
+    tareas: { title: 'Mis tareas del día', sub: 'Tickets de tareas diarias asignados a tu cargo.' },
+    directorio: { title: 'Directorio del personal', sub: 'Personal activo del instituto.' },
+    horario: { title: 'Horario general del instituto', sub: 'Distribución oficial de clases por día.' }
+  };
+
+  if (Servicios && titles[view]) {
+    Servicios.mostrarVista(view);
+    document.getElementById('pageTitle').textContent = titles[view].title;
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = titles[view].sub;
+  }
+}
+
+// ==========================================
+// CONTROL DEL MENÚ LATERAL (COLAPSO Y MÓVIL)
+// ==========================================
+
+function toggleSidebarCollapse() {
+  const dash = document.querySelector('.dashboard');
+  if (!dash) return;
+
+  if (window.innerWidth <= 768) {
+    toggleSidebar();
+    return;
+  }
+
+  dash.classList.toggle('sidebar-collapsed');
+  const isCollapsed = dash.classList.contains('sidebar-collapsed');
+  localStorage.setItem('insavi_sidebar_collapsed', isCollapsed ? '1' : '0');
+}
+
+function initSidebarState() {
+  if (window.innerWidth > 768 && localStorage.getItem('insavi_sidebar_collapsed') === '1') {
+    document.querySelector('.dashboard')?.classList.add('sidebar-collapsed');
+  }
+}
 
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
@@ -366,14 +547,13 @@ function closeSidebar() {
 
 function initTheme() {
   const savedTheme = localStorage.getItem('theme');
-  const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  if (savedTheme === 'dark' || (!savedTheme && userPrefersDark)) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    updateThemeButton(true);
-  } else {
+  if (savedTheme === 'light') {
     document.documentElement.removeAttribute('data-theme');
     updateThemeButton(false);
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeButton(true);
   }
 }
 

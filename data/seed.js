@@ -279,7 +279,7 @@ const INSAVI_SEED = {
       email: 'jorge.lopez@padre.insavi.edu.sv',
       password: 'padre123',
       rol: 'padre',
-      hijos: ['usr_004'],
+      hijos: ['usr_004', 'usr_005'],
       activo: true
     },
     {
@@ -534,11 +534,35 @@ const INSAVI_SEED = {
     { id: 'nota_068', estudiante_id: 'usr_030', materia_id: 'mat_023', nota1: 9.0, nota2: 9.0, nota3: 9.5 },
     { id: 'nota_069', estudiante_id: 'usr_030', materia_id: 'mat_024', nota1: 8.0, nota2: 8.5, nota3: 8.0 },
     { id: 'nota_070', estudiante_id: 'usr_030', materia_id: 'mat_025', nota1: 9.0, nota2: 9.5, nota3: 9.0 }
+  ],
+
+  // 6. PLANTILLAS DE TAREAS DE SERVICIOS (por tipo de cargo)
+  tareas_plantillas: [
+    // Mantenimiento General
+    { id: 'tpl_001', cargo: 'mantenimiento', turno: 'manana', titulo: 'Revisión eléctrica del edificio A', descripcion: 'Verificar tableros, enchufes y alumbrado de las aulas 1 al 8.' },
+    { id: 'tpl_002', cargo: 'mantenimiento', turno: 'manana', titulo: 'Inspección de sanitarios bloque norte', descripcion: 'Revisar tuberías, llaves de agua y estado general de los baños.' },
+    { id: 'tpl_003', cargo: 'mantenimiento', turno: 'tarde', titulo: 'Reparación de mobiliario reportado', descripcion: 'Atender los reportes de pupitres o mesas dañadas entregados por docentes.' },
+    { id: 'tpl_004', cargo: 'mantenimiento', turno: 'tarde', titulo: 'Revisión de techos y filtraciones', descripcion: 'Inspeccionar el techo del laboratorio y la cancha tras lluvia reciente.' },
+    { id: 'tpl_005', cargo: 'mantenimiento', turno: 'manana', titulo: 'Mantenimiento de aires y ventiladores', descripcion: 'Limpiar filtros y verificar funcionamiento de equipos de ventilación.' },
+
+    // Limpieza
+    { id: 'tpl_006', cargo: 'limpieza', turno: 'manana', titulo: 'Limpieza de aulas 1°A y 1°B', descripcion: 'Barrer, limpiar pizarras y desinfectar superficies antes de entrada.' },
+    { id: 'tpl_007', cargo: 'limpieza', turno: 'manana', titulo: 'Limpieza de baños y lavamanos', descripcion: 'Desinfectar todos los sanitarios y reponer papel y jabón.' },
+    { id: 'tpl_008', cargo: 'limpieza', turno: 'manana', titulo: 'Limpieza de pasillos y áreas comunes', descripcion: 'Barrer y trapejar los pasillos del edificio principal.' },
+    { id: 'tpl_009', cargo: 'limpieza', turno: 'tarde', titulo: 'Limpieza de laboratorio de informática', descripcion: 'Limpiar pantallas, teclados y superficies del laboratorio.' },
+    { id: 'tpl_010', cargo: 'limpieza', turno: 'tarde', titulo: 'Recolección de basura general', descripcion: 'Vaciar los basureros de todas las aulas y áreas y llevar al punto de recolección.' },
+
+    // Seguridad
+    { id: 'tpl_011', cargo: 'seguridad', turno: 'manana', titulo: 'Control de ingreso matutino', descripcion: 'Registrar la entrada de estudiantes y personal entre 6:30 y 7:30.' },
+    { id: 'tpl_012', cargo: 'seguridad', turno: 'manana', titulo: 'Ronda perimetral — mañana', descripcion: 'Inspeccionar el perímetro del instituto y verificar portones.' },
+    { id: 'tpl_013', cargo: 'seguridad', turno: 'tarde', titulo: 'Ronda perimetral — tarde', descripcion: 'Segunda ronda de inspección del perímetro tras el recreo.' },
+    { id: 'tpl_014', cargo: 'seguridad', turno: 'tarde', titulo: 'Control de salida vespertina', descripcion: 'Supervisar la salida de estudiantes y cierre de puertas al finalizar el día.' },
+    { id: 'tpl_015', cargo: 'seguridad', turno: 'tarde', titulo: 'Revisión de cámaras y equipo de vigilancia', descripcion: 'Verificar que las cámaras de seguridad estén operativas.' }
   ]
 };
 
 // Versión de control para actualización de datos en el cliente
-const INSAVI_SEED_VERSION = 'v3.0_expanded_full';
+const INSAVI_SEED_VERSION = 'v3.2_servicios_tickets';
 
 // Función para cargar o actualizar datos iniciales
 // Se verifica que los datos EXISTAN y no estén vacíos; si la versión coincide
@@ -559,11 +583,13 @@ function cargarDatosIniciales() {
   localStorage.setItem('insavi_materias', JSON.stringify(INSAVI_SEED.materias));
   localStorage.setItem('insavi_horarios', JSON.stringify(INSAVI_SEED.horarios));
   localStorage.setItem('insavi_notas', JSON.stringify(INSAVI_SEED.notas));
+  localStorage.setItem('insavi_tareas_plantillas', JSON.stringify(INSAVI_SEED.tareas_plantillas));
   localStorage.setItem('insavi_seed_version', INSAVI_SEED_VERSION);
 
-  console.log(`%c[INSAVI] Base de datos cargada (v${INSAVI_SEED_VERSION})`, 'color: #8b5cf6; font-weight: bold;');
+  console.log(`%c[INSAVI] Base de datos cargada (${INSAVI_SEED_VERSION})`, 'color: #8b5cf6; font-weight: bold;');
   return true;
 }
 
 // Auto-ejecutar al cargar el script
 cargarDatosIniciales();
+

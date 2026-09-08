@@ -301,6 +301,103 @@ const DB = {
   },
 
   // ==========================================
+  // TAREAS DIARIAS DE SERVICIOS
+  // ==========================================
+
+  getFechaHoy() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dia}`;
+  },
+
+  getFechaKey(fecha) {
+    return `insavi_tareas_${fecha}`;
+  },
+
+  getTareasPlantillas() {
+    return this.get('insavi_tareas_plantillas');
+  },
+
+  getTareasDiarias(fecha) {
+    return this.get(this.getFechaKey(fecha));
+  },
+
+  guardarTareasDiarias(tareas, fecha) {
+    return this.set(this.getFechaKey(fecha), tareas);
+  },
+
+  // Mapea el cargo libre del usuario al cargo de las plantillas
+  obtenerCargoKey(usuario) {
+    if (!usuario || !usuario.cargo) return null;
+    const cargo = usuario.cargo.toLowerCase();
+    if (cargo.includes('mantenimiento')) return 'mantenimiento';
+    if (cargo.includes('limpieza')) return 'limpieza';
+    if (cargo.includes('seguridad')) return 'seguridad';
+    return null;
+  },
+
+  generarTareasDelDia(fecha) {
+    const existentes = this.getTareasDiarias(fecha);
+    if (existentes.length > 0) return existentes;
+
+    const usuarios = this.getUsuariosByRol('servicios').filter(u => u.activo);
+    const plantillas = this.getTareasPlantillas();
+    const nuevas = [];
+
+    usuarios.forEach(user => {
+      const cargoKey = this.obtenerCargoKey(user);
+      if (!cargoKey) return;
+
+      const plantillasCargo = plantillas.filter(p => p.cargo === cargoKey);
+      plantillasCargo.forEach((pl, i) => {
+        nuevas.push({
+          id: `tarea_${fecha}_${user.id}_${i}`,
+          plantilla_id: pl.id,
+          usuario_id: user.id,
+          cargo: cargoKey,
+          titulo: pl.titulo,
+          descripcion: pl.descripcion,
+          turno: pl.turno,
+          estado: 'pendiente',
+          creada_en: new Date().toISOString(),
+          actualizada_en: null
+        });
+      });
+    });
+
+    this.guardarTareasDiarias(nuevas, fecha);
+    return nuevas;
+  },
+
+  getTareasDelUsuario(usuarioId, fecha) {
+    const tareas = this.getTareasDiarias(fecha);
+    return tareas.filter(t => t.usuario_id === usuarioId);
+  },
+
+  getTareasDelCargo(cargo, fecha) {
+    const tareas = this.getTareasDiarias(fecha);
+    return tareas.filter(t => t.cargo === cargo);
+  },
+
+  actualizarEstadoTarea(tareaId, estado, fecha) {
+    const tareas = this.getTareasDiarias(fecha);
+    const idx = tareas.findIndex(t => t.id === tareaId);
+    if (idx === -1) return null;
+
+    tareas[idx].estado = estado;
+    tareas[idx].actualizada_en = new Date().toISOString();
+    this.guardarTareasDiarias(tareas, fecha);
+    return tareas[idx];
+  },
+
+  resetTareasDelDia(fecha) {
+    localStorage.removeItem(this.getFechaKey(fecha));
+    return this.generarTareasDelDia(fecha);
+  },
+
+  // ==========================================
   // SESIÓN
   // ==========================================
   

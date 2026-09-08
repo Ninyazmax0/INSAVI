@@ -1,6 +1,6 @@
 /**
- * INSAVI - Panel de Docente (Rediseñado)
- * Ingreso de notas interactivo y visualización de horarios
+ * INSAVI - Panel de Docente (Rediseño de Alta Fidelidad)
+ * Gestión interactiva de notas, materias y horario semanal
  */
 
 const Docente = {
@@ -20,12 +20,13 @@ const Docente = {
   },
 
   // ==========================================
-  // ESTADÍSTICAS
+  // ESTADÍSTICAS (KPIs)
   // ==========================================
 
   cargarEstadisticas(docenteId) {
     const materias = DB.getMateriasByDocente(docenteId);
-    document.getElementById('statMisMaterias').textContent = materias.length;
+    const elMaterias = document.getElementById('statMisMaterias');
+    if (elMaterias) elMaterias.textContent = materias.length;
 
     const seccionesIds = [...new Set(materias.map(m => m.seccion_id))];
     const usuarios = DB.getUsuariosByRol('estudiante');
@@ -33,82 +34,133 @@ const Docente = {
       const seccion = DB.getSecciones().find(s => s.nombre === u.seccion);
       return seccion && seccionesIds.includes(seccion.id);
     });
-    document.getElementById('statMisEstudiantes').textContent = estudiantesEnSecciones.length;
+    const elEstudiantes = document.getElementById('statMisEstudiantes');
+    if (elEstudiantes) elEstudiantes.textContent = estudiantesEnSecciones.length;
 
     const materiaIds = materias.map(m => m.id);
     const notas = DB.getNotas().filter(n => materiaIds.includes(n.materia_id));
-    document.getElementById('statNotasIngresadas').textContent = notas.length;
+    const elNotas = document.getElementById('statNotasIngresadas');
+    if (elNotas) elNotas.textContent = notas.length;
   },
 
   // ==========================================
-  // GRID DE MATERIAS (MENÚ LATERAL)
+  // GRID DE MATERIAS (COLUMNA IZQUIERDA)
   // ==========================================
+
+  getMateriaIconInfo(nombre) {
+    const n = (nombre || '').toLowerCase();
+    if (n.includes('financiera') || n.includes('contabilidad') || n.includes('estadística')) {
+      return {
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
+        colorClass: 'teal'
+      };
+    }
+    if (n.includes('aplicada') || n.includes('técnica') || n.includes('mecatrónica') || n.includes('física')) {
+      return {
+        svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+        colorClass: 'amber'
+      };
+    }
+    return {
+      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l7 8-7 8h12"/></svg>',
+      colorClass: 'purple'
+    };
+  },
 
   cargarMateriasGrid(docenteId) {
     const materias = DB.getMateriasByDocente(docenteId);
     const container = document.getElementById('listaMateriasCards');
     
-    if (!container) return; // Por seguridad si no ha cargado el DOM
-    
+    if (!container) return;
     container.innerHTML = '';
 
     if (materias.length === 0) {
-      container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">No tienes materias asignadas aún.</p>`;
+      container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem; padding: 1rem; text-align: center;">No tienes materias asignadas aún.</p>`;
       return;
     }
 
     materias.forEach(m => {
       const seccion = DB.getSeccionById(m.seccion_id);
       const secNombre = seccion ? seccion.nombre : 'Sin sección';
+      const iconInfo = this.getMateriaIconInfo(m.nombre);
       
       container.innerHTML += `
-        <button class="materia-card-btn" id="btn-mat-${m.id}" onclick="Docente.seleccionarMateria('${m.id}', '${m.nombre}', '${secNombre}')">
-          <span class="m-title">${m.nombre}</span>
-          <span class="m-sec">Sección: ${secNombre}</span>
+        <button class="docente-materia-btn" id="btn-mat-${m.id}" onclick="Docente.seleccionarMateria('${m.id}', '${m.nombre}', '${secNombre}')">
+          <div class="docente-materia-badge ${iconInfo.colorClass}">
+            ${iconInfo.svg}
+          </div>
+          <div class="docente-materia-info">
+            <span class="docente-materia-name">${m.nombre}</span>
+            <span class="docente-materia-sec">Sección: ${secNombre}</span>
+          </div>
+          <div class="docente-materia-chevron">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
         </button>
       `;
     });
 
-    // Stagger animation para cards de materias
-    const cards = container.querySelectorAll('.materia-card-btn');
-    cards.forEach((card, i) => {
-      card.classList.add('list-item-enter');
-      card.style.animationDelay = `${i * 0.05}s`;
-    });
+    // Auto-selección inicial: Seleccionar Matemática II (mat_011) o la primera materia
+    if (!this.materiaActiva) {
+      const targetMateria = materias.find(m => m.id === 'mat_011') || materias[0];
+      if (targetMateria) {
+        const seccion = DB.getSeccionById(targetMateria.seccion_id);
+        const secNombre = seccion ? seccion.nombre : 'Sin sección';
+        this.seleccionarMateria(targetMateria.id, targetMateria.nombre, secNombre);
+      }
+    } else {
+      // Re-marcar el activo
+      const btn = document.getElementById(`btn-mat-${this.materiaActiva}`);
+      if (btn) btn.classList.add('active');
+    }
   },
 
   // ==========================================
-  // SELECCIÓN Y CARGA DE ESTUDIANTES
+  // SELECCIÓN DE MATERIA Y CALIFICACIONES
   // ==========================================
 
   seleccionarMateria(materiaId, nombre, seccionNombre) {
     this.materiaActiva = materiaId;
     
-    // UI Update (botones)
-    document.querySelectorAll('.materia-card-btn').forEach(btn => btn.classList.remove('active'));
+    // UI Update (botones materias)
+    document.querySelectorAll('.docente-materia-btn').forEach(btn => btn.classList.remove('active'));
     const btnActivo = document.getElementById(`btn-mat-${materiaId}`);
-    if(btnActivo) btnActivo.classList.add('active');
+    if (btnActivo) btnActivo.classList.add('active');
     
-    // Alternar paneles
-    document.getElementById('panelNotasVacio').style.display = 'none';
+    // Alternar paneles de notas
+    const panelVacio = document.getElementById('panelNotasVacio');
+    if (panelVacio) panelVacio.style.display = 'none';
     const panelActivo = document.getElementById('panelNotasActivo');
-    panelActivo.style.display = 'flex';
+    if (panelActivo) panelActivo.style.display = 'flex';
     
-    // Textos cabecera
-    document.getElementById('tituloMateriaActiva').textContent = nombre;
-    document.getElementById('subtituloSeccionActiva').textContent = `Sección ${seccionNombre}`;
+    // Actualizar icono de cabecera según la materia
+    const iconInfo = this.getMateriaIconInfo(nombre);
+    const iconoHeader = document.getElementById('iconoMateriaActiva');
+    if (iconoHeader) {
+      iconoHeader.innerHTML = iconInfo.svg;
+      iconoHeader.className = `docente-calif-symbol ${iconInfo.colorClass}`;
+    }
+
+    // Títulos de cabecera
+    const elTitulo = document.getElementById('tituloMateriaActiva');
+    if (elTitulo) elTitulo.textContent = nombre;
+
+    const elSubtitulo = document.getElementById('subtituloSeccionActiva');
+    if (elSubtitulo) elSubtitulo.textContent = `Sección: ${seccionNombre}`;
     
     this.renderTablaEstudiantes(materiaId, seccionNombre);
   },
 
   renderTablaEstudiantes(materiaId, seccionNombre) {
     const tbody = document.querySelector('#tablaNotasNuevas tbody');
+    if (!tbody) return;
     tbody.innerHTML = '';
     
     const estudiantes = DB.getUsuariosByRol('estudiante').filter(u => u.seccion === seccionNombre);
     
     if (estudiantes.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 3rem; color: var(--text-muted);">No hay estudiantes registrados en la sección <b>${seccionNombre}</b>.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 3.5rem; color: var(--text-muted); font-size: 0.95rem;">No hay estudiantes registrados en la sección <b>${seccionNombre}</b>.</td></tr>`;
+      this.actualizarResumenFooter(0, 0, 0);
       return;
     }
     
@@ -117,101 +169,97 @@ const Docente = {
 
     estudiantes.forEach(est => {
       const notaEx = DB.getNotas().find(n => n.estudiante_id === est.id && n.materia_id === materiaId);
-      const n1 = notaEx ? notaEx.nota1 : '';
-      const n2 = notaEx ? notaEx.nota2 : '';
-      const n3 = notaEx ? notaEx.nota3 : '';
-      const prom = notaEx ? DB.calcularPromedio(notaEx) : '-';
+      const n1 = notaEx && notaEx.nota1 !== undefined ? notaEx.nota1 : '';
+      const n2 = notaEx && notaEx.nota2 !== undefined ? notaEx.nota2 : '';
+      const n3 = notaEx && notaEx.nota3 !== undefined ? notaEx.nota3 : '';
       
-      if (prom !== '-') {
-        if (parseFloat(prom) >= 6.0) aprobados++;
-        else reprobados++;
+      let promFormatted = '-';
+      let promClass = 'prom-none';
+
+      if (notaEx) {
+        const rawProm = DB.calcularPromedio(notaEx);
+        if (rawProm !== '-') {
+          const numProm = parseFloat(rawProm);
+          promFormatted = numProm.toFixed(2);
+          if (numProm >= 9.0) {
+            promClass = 'prom-excellent';
+            aprobados++;
+          } else if (numProm >= 7.5) {
+            promClass = 'prom-good';
+            aprobados++;
+          } else if (numProm >= 6.0) {
+            promClass = 'prom-average';
+            aprobados++;
+          } else {
+            promClass = 'prom-poor';
+            reprobados++;
+          }
+        }
       }
 
       tbody.innerHTML += `
         <tr>
-          <td style="padding-left: 1.5rem;">
-            <div style="font-weight: 600; color: var(--accent); margin-bottom: 0.1rem; cursor: pointer; text-decoration: underline;" onclick="Docente.verPerfilEstudiante('${est.id}')">${est.nombre}</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">${est.email}</div>
+          <td>
+            <div class="docente-student-cell">
+              <span class="docente-student-name" onclick="Docente.verPerfilEstudiante('${est.id}')" title="Ver perfil de ${est.nombre}">
+                ${est.nombre}
+              </span>
+              <span class="docente-student-email">${est.email}</span>
+            </div>
           </td>
-          <td style="text-align:center;">
-            <input type="number" class="input" style="width: 70px; padding: 0.4rem; text-align:center; margin: 0 auto;" min="0" max="10" step="0.1" value="${n1}" id="new_n1_${est.id}">
+          <td>
+            <input type="number" class="docente-nota-input" min="0" max="10" step="0.1" value="${n1}" id="new_n1_${est.id}">
           </td>
-          <td style="text-align:center;">
-            <input type="number" class="input" style="width: 70px; padding: 0.4rem; text-align:center; margin: 0 auto;" min="0" max="10" step="0.1" value="${n2}" id="new_n2_${est.id}">
+          <td>
+            <input type="number" class="docente-nota-input" min="0" max="10" step="0.1" value="${n2}" id="new_n2_${est.id}">
           </td>
-          <td style="text-align:center;">
-            <input type="number" class="input" style="width: 70px; padding: 0.4rem; text-align:center; margin: 0 auto;" min="0" max="10" step="0.1" value="${n3}" id="new_n3_${est.id}">
+          <td>
+            <input type="number" class="docente-nota-input" min="0" max="10" step="0.1" value="${n3}" id="new_n3_${est.id}">
           </td>
-          <td style="text-align:center;">
-            <span class="nota-badge ${this.getNotaClass(prom)}">${prom}</span>
+          <td>
+            <span class="docente-prom-badge ${promClass}">${promFormatted}</span>
           </td>
-          <td style="text-align:center; padding-right: 1.5rem;">
-            <button class="btn btn-primary btn-sm" style="width: 100%; justify-content: center;" onclick="Docente.guardarNuevaNota('${est.id}', '${materiaId}', '${notaEx ? notaEx.id : ''}')">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.2rem;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-              Guardar
-            </button>
+          <td>
+            <div class="docente-actions-group">
+              <button class="docente-btn-guardar" onclick="Docente.guardarNuevaNota('${est.id}', '${materiaId}', '${notaEx ? notaEx.id : ''}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+                </svg>
+                Guardar
+              </button>
+              <button class="docente-btn-dots" onclick="Docente.verPerfilEstudiante('${est.id}')" title="Ver detalles y notas">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+                </svg>
+              </button>
+            </div>
           </td>
         </tr>
       `;
     });
 
-    // Stagger animation para filas de estudiantes
-    const rows = tbody.querySelectorAll('tr');
-    rows.forEach((row, i) => {
-      row.classList.add('list-item-enter');
-      row.style.animationDelay = `${i * 0.03}s`;
-    });
-
-    // Inyectar el resumen en la vista
-    let sumContainer = document.getElementById('resumenRendimiento');
-    if (!sumContainer) {
-      sumContainer = document.createElement('div');
-      sumContainer.id = 'resumenRendimiento';
-      sumContainer.style = 'padding: 1rem 1.5rem; background: var(--bg-hover); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;';
-      document.getElementById('panelNotasActivo').appendChild(sumContainer);
-    }
-    
-    sumContainer.innerHTML = `
-      <div style="font-size: 0.9rem; color: var(--text-secondary);">
-        <strong>Resumen de la clase:</strong> 
-        <span style="color: var(--success); margin-left: 0.5rem;">${aprobados} Aprobados</span> | 
-        <span style="color: var(--error-600);">${reprobados} Reprobados</span> |
-        <span class="muted" style="margin-left: 0.5rem;">Total: ${estudiantes.length} alumnos</span>
-      </div>
-    `;
+    this.actualizarResumenFooter(aprobados, reprobados, estudiantes.length);
   },
 
-  verPerfilEstudiante(id) {
-    const u = DB.getUsuarioById(id);
-    if (!u) return;
-    
-    const notas = DB.getNotas().filter(n => n.estudiante_id === id);
-    const html = `
-      <div style="font-size: 0.95rem; line-height: 1.6;">
-        <div style="background: var(--bg-canvas); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1rem;">
-          <h4 style="margin-bottom: 0.25rem; color: var(--accent);">${u.nombre}</h4>
-          <p class="muted" style="margin-bottom: 0.75rem;">${u.email}</p>
-          <span class="role-badge estudiante">Estudiante</span>
-          <strong>Sección:</strong> ${u.seccion || 'Ninguna'}
-        </div>
-        <div class="mt-2">
-          <strong>Rendimiento Académico:</strong>
-          <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
-            ${notas.length === 0 ? '<li>Sin notas registradas</li>' : notas.map(n => {
-              const materia = DB.getMateriaById(n.materia_id);
-              const prom = DB.calcularPromedio(n);
-              return `<li>${materia ? materia.nombre : 'Materia borrada'}: Promedio <strong>${prom}</strong></li>`;
-            }).join('')}
-          </ul>
-        </div>
-      </div>
-      <div class="form-actions mt-3">
-        <button type="button" class="btn btn-primary" onclick="closeModal()">Cerrar perfil</button>
-      </div>
-    `;
-    document.getElementById('modalTitle').textContent = 'Perfil del Estudiante';
-    document.getElementById('modalBody').innerHTML = html;
-    document.getElementById('modalOverlay').classList.add('active');
+  actualizarResumenFooter(aprobados, reprobados, total) {
+    const elTexto = document.getElementById('resumenRendimientoTexto');
+    if (elTexto) {
+      elTexto.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span><strong>Resumen de la clase:</strong> <span style="color: #34d399; margin-left: 0.35rem;">${aprobados} Aprobados</span> | <span style="color: #f87171;">${reprobados} Reprobados</span> | <span style="color: var(--text-muted); margin-left: 0.35rem;">Total: ${total} alumnos</span></span>
+      `;
+    }
+
+    const elActualizacion = document.getElementById('resumenUltimaActualizacion');
+    if (elActualizacion) {
+      const now = new Date();
+      const horas = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      elActualizacion.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Última actualización: Hoy, ${horas}:${mins}</span>
+      `;
+    }
   },
 
   // ==========================================
@@ -219,12 +267,16 @@ const Docente = {
   // ==========================================
 
   guardarNuevaNota(estudianteId, materiaId, notaId) {
-    const nota1 = parseFloat(document.getElementById(`new_n1_${estudianteId}`).value) || 0;
-    const nota2 = parseFloat(document.getElementById(`new_n2_${estudianteId}`).value) || 0;
-    const nota3 = parseFloat(document.getElementById(`new_n3_${estudianteId}`).value) || 0;
+    const input1 = document.getElementById(`new_n1_${estudianteId}`);
+    const input2 = document.getElementById(`new_n2_${estudianteId}`);
+    const input3 = document.getElementById(`new_n3_${estudianteId}`);
 
-    if (nota1 > 10 || nota2 > 10 || nota3 > 10) {
-      showToast('Las notas no pueden ser mayores a 10', 'error');
+    const nota1 = input1 && input1.value !== '' ? parseFloat(input1.value) : 0;
+    const nota2 = input2 && input2.value !== '' ? parseFloat(input2.value) : 0;
+    const nota3 = input3 && input3.value !== '' ? parseFloat(input3.value) : 0;
+
+    if (nota1 > 10 || nota2 > 10 || nota3 > 10 || nota1 < 0 || nota2 < 0 || nota3 < 0) {
+      showToast('Las notas deben estar comprendidas entre 0.0 y 10.0', 'error');
       return;
     }
 
@@ -245,10 +297,10 @@ const Docente = {
     const materia = DB.getMateriaById(materiaId);
     const seccion = DB.getSeccionById(materia.seccion_id);
     
-    // Recargar tabla para mostrar el nuevo promedio
+    // Refrescar tabla
     this.renderTablaEstudiantes(materiaId, seccion.nombre);
 
-    // Recargar KPI
+    // Refrescar KPIs
     const user = DB.getCurrentUser();
     this.cargarEstadisticas(user.id);
 
@@ -256,70 +308,175 @@ const Docente = {
   },
 
   // ==========================================
-  // HORARIO DEL DOCENTE
+  // HORARIO SEMANAL (SECCIÓN INFERIOR)
   // ==========================================
 
   cargarHorario(docenteId) {
     const horarios = DB.getHorariosByDocente(docenteId);
     const container = document.getElementById('horarioDocente');
+    if (!container) return;
 
-    if (horarios.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">${SVG.clock}</div>
-          <h4>Sin horarios asignados</h4>
-          <p>No tienes clases programadas esta semana</p>
-        </div>
-      `;
-      return;
-    }
+    const dias = [
+      { nombre: 'Lunes', classBanner: 'banner-lunes', esHoy: true, icon: 'cal' },
+      { nombre: 'Martes', classBanner: 'banner-martes', esHoy: false, icon: 'user' },
+      { nombre: 'Miércoles', classBanner: 'banner-miercoles', esHoy: false, icon: 'cal' },
+      { nombre: 'Jueves', classBanner: 'banner-jueves', esHoy: false, icon: 'user' },
+      { nombre: 'Viernes', classBanner: 'banner-viernes', esHoy: false, icon: 'cal' }
+    ];
 
-    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    const iconCalendarSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.35rem;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+    const iconUserSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.35rem;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+
+    // Paleta de acentos para tarjetas de clases
+    const barColors = ['#10b981', '#f59e0b', '#38bdf8', '#8b5cf6', '#ec4899'];
+    const timeColors = ['#34d399', '#fbbf24', '#38bdf8', '#a78bfa', '#f472b6'];
 
     container.innerHTML = `
-      <div class="horario-grid">
-        ${dias.map(dia => {
-          const horariosDia = horarios.filter(h => h.dia === dia);
-          return `
-            <div class="horario-dia">
-              <div class="horario-dia-header">${dia}</div>
-              <div class="horario-dia-content">
-                ${horariosDia.length > 0 ? horariosDia.map(h => {
-                  const materia = DB.getMateriaById(h.materia_id);
-                  const seccion = materia ? DB.getSeccionById(materia.seccion_id) : null;
-                  const secNombre = seccion ? seccion.nombre : '-';
-                  return `
-                    <div class="horario-clase" style="border-left: 3px solid var(--accent); padding-left: 0.75rem; background: var(--bg-canvas); margin-bottom: 0.5rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
-                      <div class="time" style="color: var(--accent); font-weight: 600; font-size: 0.85rem; margin-bottom: 0.2rem;">${h.hora_inicio} - ${h.hora_fin}</div>
-                      <div class="materia" style="font-weight: 500; color: var(--text-primary);">${materia ? materia.nombre : '-'}</div>
-                      <div class="seccion" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.1rem;">Sección: ${secNombre}</div>
-                    </div>
-                  `;
-                }).join('') : '<p class="horario-vacio" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 1rem 0;">Sin clases</p>'}
+      <div class="docente-horario-grid">
+        ${dias.map(d => {
+          const clasesDia = horarios.filter(h => h.dia.toLowerCase() === d.nombre.toLowerCase());
+          
+          let diaHtml = `
+            <div class="docente-dia-col">
+              <div class="docente-dia-banner ${d.classBanner}">
+                <div style="display: flex; align-items: center;">
+                  ${d.icon === 'user' ? iconUserSvg : iconCalendarSvg}
+                  ${d.nombre.toUpperCase()}
+                </div>
+                ${d.esHoy ? '<span class="docente-badge-hoy">Hoy</span>' : ''}
               </div>
-            </div>
           `;
+
+          if (clasesDia.length > 0) {
+            diaHtml += `<div class="docente-dia-content">`;
+            clasesDia.forEach((h, idx) => {
+              const materia = DB.getMateriaById(h.materia_id);
+              const seccion = materia ? DB.getSeccionById(materia.seccion_id) : null;
+              const secNombre = seccion ? seccion.nombre : '-';
+              const barColor = barColors[idx % barColors.length];
+              const timeColor = timeColors[idx % timeColors.length];
+
+              diaHtml += `
+                <div class="docente-clase-card" style="--clase-accent: ${barColor}; --clase-time: ${timeColor};">
+                  <div class="docente-clase-time">${h.hora_inicio} - ${h.hora_fin}</div>
+                  <div class="docente-clase-materia">${materia ? materia.nombre : 'Clase'}</div>
+                  <div class="docente-clase-seccion">Sección: ${secNombre}</div>
+                </div>
+              `;
+            });
+            diaHtml += `</div>`;
+          } else {
+            diaHtml += `
+              <div class="docente-dia-vacio">
+                <div class="docente-vacio-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <div class="docente-vacio-title">Sin clases</div>
+              </div>
+            `;
+          }
+
+          diaHtml += `</div>`;
+          return diaHtml;
         }).join('')}
       </div>
     `;
   },
 
   // ==========================================
-  // UTILIDADES
+  // MODALES Y UTILIDADES
   // ==========================================
 
-  getNotaClass(promedio) {
-    const num = parseFloat(promedio);
-    if (isNaN(num)) return '';
-    if (num >= 9) return 'excellent';
-    if (num >= 7.5) return 'good';
-    if (num >= 6) return 'average';
-    return 'poor';
+  verPerfilEstudiante(id) {
+    const u = DB.getUsuarioById(id);
+    if (!u) return;
+    
+    const notas = DB.getNotas().filter(n => n.estudiante_id === id);
+    const html = `
+      <div style="font-size: 0.95rem; line-height: 1.6;">
+        <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid rgba(139, 92, 246, 0.25); margin-bottom: 1.25rem;">
+          <h3 style="margin-bottom: 0.25rem; color: #a78bfa; font-size: 1.25rem;">${u.nombre}</h3>
+          <p style="color: var(--text-muted); margin-bottom: 0.85rem; font-size: 0.85rem;">${u.email}</p>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <span class="role-badge estudiante" style="margin: 0;">Estudiante</span>
+            <span style="font-size: 0.88rem; color: var(--text-secondary);"><strong>Sección:</strong> ${u.seccion || 'Ninguna'}</span>
+          </div>
+        </div>
+        <div>
+          <strong style="color: var(--text-primary); font-size: 1rem; display: block; margin-bottom: 0.75rem;">Historial de Calificaciones:</strong>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${notas.length === 0 ? '<p style="color: var(--text-muted); font-size: 0.88rem;">Sin notas registradas</p>' : notas.map(n => {
+              const materia = DB.getMateriaById(n.materia_id);
+              const prom = DB.calcularPromedio(n);
+              return `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                  <span style="font-weight: 500; font-size: 0.88rem; color: var(--text-primary);">${materia ? materia.nombre : 'Materia'}</span>
+                  <span class="docente-prom-badge ${parseFloat(prom) >= 6.0 ? 'prom-good' : 'prom-poor'}">${prom}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="form-actions mt-3">
+        <button type="button" class="btn btn-primary" onclick="closeModal()">Cerrar perfil</button>
+      </div>
+    `;
+    document.getElementById('modalTitle').textContent = 'Perfil del Estudiante';
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
   },
 
-  // ==========================================
-  // IMPRESIÓN
-  // ==========================================
+  verCalendarioCompleto() {
+    const user = DB.getCurrentUser();
+    if (!user) return;
+
+    const horarios = DB.getHorariosByDocente(user.id);
+    const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+
+    const html = `
+      <div style="font-size: 0.95rem; line-height: 1.6;">
+        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">Programación completa de clases semanales para <strong>${user.nombre}</strong>.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Día</th>
+                <th>Horario</th>
+                <th>Materia</th>
+                <th>Sección</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${horarios.length === 0 ? '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--text-muted);">Sin clases registradas</td></tr>' : 
+                horarios.sort((a,b) => dias.indexOf(a.dia) - dias.indexOf(b.dia)).map(h => {
+                  const mat = DB.getMateriaById(h.materia_id);
+                  const sec = mat ? DB.getSeccionById(mat.seccion_id) : null;
+                  return `
+                    <tr>
+                      <td><strong style="color: #a78bfa;">${h.dia}</strong></td>
+                      <td class="tnum" style="font-weight: 600;">${h.hora_inicio} - ${h.hora_fin}</td>
+                      <td>${mat ? mat.nombre : '-'}</td>
+                      <td>${sec ? sec.nombre : '-'}</td>
+                    </tr>
+                  `;
+                }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="form-actions mt-3">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()">Imprimir horario</button>
+      </div>
+    `;
+    document.getElementById('modalTitle').textContent = 'Calendario Semanal de Docente';
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('active');
+  },
 
   imprimirNotas() {
     if (!this.materiaActiva) {
@@ -345,7 +502,7 @@ const Docente = {
 
     imprimirTabla(
       'Registro de Notas - ' + (materia ? materia.nombre : ''),
-      'Seccion: ' + (seccion ? seccion.nombre : '-') + ' | Docente: ' + (user ? user.nombre : ''),
+      'Sección: ' + (seccion ? seccion.nombre : '-') + ' | Docente: ' + (user ? user.nombre : ''),
       columnas,
       datos
     );

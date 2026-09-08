@@ -1,9 +1,12 @@
 /**
- * INSAVI - Panel de Padre de Familia
- * Visualización de notas e hijos
+ * INSAVI - Panel de Padre de Familia (Rediseño de Alta Fidelidad)
+ * Vista resumen familiar (KPIs + previsualización) → Vista detalle (selector de hijos, calificaciones y horario)
  */
 
 const Padre = {
+  hijoActivoId: null,
+  hijosIds: [],
+
   // ==========================================
   // INICIALIZACIÓN
   // ==========================================
@@ -12,13 +15,168 @@ const Padre = {
     const user = DB.getCurrentUser();
     if (!user) return;
 
-    this.cargarHijos(user.hijos || []);
+    this.hijosIds = user.hijos || [];
+    this.cargarResumen(this.hijosIds);
   },
 
-  hijoActivoId: null,
+  // ==========================================
+  // ICONOS Y COLORES POR MATERIA (SVG)
+  // ==========================================
+
+  getMateriaIconInfo(nombre) {
+    const n = (nombre || '').toLowerCase();
+    if (n.includes('matemática') || n.includes('calculo') || n.includes('algebra')) {
+      return {
+        symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4H6l7 8-7 8h12"/></svg>',
+        colorClass: 'purple'
+      };
+    }
+    if (n.includes('lenguaje') || n.includes('literatura') || n.includes('español')) {
+      return {
+        symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+        colorClass: 'green'
+      };
+    }
+    if (n.includes('ciencia') || n.includes('química') || n.includes('física') || n.includes('biología')) {
+      return {
+        symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31L4.69 18.25A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.71-2.75L14 9.31V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/></svg>',
+        colorClass: 'amber'
+      };
+    }
+    if (n.includes('inglés') || n.includes('idioma') || n.includes('english')) {
+      return {
+        symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+        colorClass: 'indigo'
+      };
+    }
+    if (n.includes('informática') || n.includes('ofimática') || n.includes('computación') || n.includes('tecnología')) {
+      return {
+        symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+        colorClass: 'cyan'
+      };
+    }
+    return {
+      symbol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+      colorClass: 'purple'
+    };
+  },
 
   // ==========================================
-  // CARGAR HIJOS
+  // VISTA RESUMEN: KPIs + preview cards
+  // ==========================================
+
+  cargarResumen(hijosIds) {
+    const elHijos = document.getElementById('statTotalHijos');
+    if (elHijos) elHijos.textContent = hijosIds.length;
+
+    if (hijosIds.length === 0) {
+      document.getElementById('statPromedioFamilia').textContent = '-';
+      document.getElementById('statHijosAprobados').textContent = '0';
+      return;
+    }
+
+    // Calcular promedio familiar
+    const promedios = hijosIds.map(id => parseFloat(DB.getPromedioGeneral(id))).filter(p => !isNaN(p));
+    const promFamilia = promedios.length > 0
+      ? (promedios.reduce((a, b) => a + b, 0) / promedios.length).toFixed(2)
+      : '-';
+    document.getElementById('statPromedioFamilia').textContent = promFamilia;
+
+    // Contar hijos con promedio >= 6
+    const aprobados = promedios.filter(p => p >= 6).length;
+    document.getElementById('statHijosAprobados').textContent = aprobados;
+
+    // Renderizar preview cards
+    this.renderPreviewCards(hijosIds);
+  },
+
+  renderPreviewCards(hijosIds) {
+    const container = document.getElementById('padreHijosPreview');
+    if (!container) return;
+
+    container.innerHTML = hijosIds.map(hijoId => {
+      const hijo = DB.getUsuarioById(hijoId);
+      if (!hijo) return '';
+      const promedio = DB.getPromedioGeneral(hijoId);
+      const promNum = parseFloat(promedio);
+      const estado = !isNaN(promNum) ? (promNum >= 6 ? 'Al día' : 'En riesgo') : 'Sin notas';
+      const estadoClass = !isNaN(promNum) ? (promNum >= 6 ? 'estado-aprobado' : 'estado-riesgo') : 'estado-sin';
+      const initials = Auth.getUserInitials(hijo.nombre);
+
+      const notas = DB.getNotasByEstudiante(hijoId);
+      const seccion = DB.getSecciones().find(s => s.nombre === hijo.seccion);
+      const materias = seccion ? DB.getMateriasBySeccion(seccion.id) : [];
+      const matCount = materias.length;
+
+      return `
+        <div class="padre-preview-card" onclick="Padre.irADetalle('${hijo.id}')">
+          <div class="padre-preview-avatar">${initials}</div>
+          <div class="padre-preview-info">
+            <div class="padre-preview-nombre">${hijo.nombre}</div>
+            <div class="padre-preview-seccion">Sección: <strong>${hijo.seccion || 'Sin asignar'}</strong></div>
+            <div class="padre-preview-materias">${matCount} materias · ${notas.length} calificaciones registradas</div>
+          </div>
+          <div class="padre-preview-right">
+            <div class="padre-preview-promedio">${promedio !== '-' ? promedio : '—'}</div>
+            <div class="padre-preview-promedio-label">promedio global</div>
+            <span class="padre-estado-badge ${estadoClass}">${estado}</span>
+          </div>
+          <svg class="padre-preview-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      `;
+    }).join('');
+  },
+
+  // ==========================================
+  // TRANSICIÓN ENTRE VISTAS
+  // ==========================================
+
+  mostrarVistaHijos() {
+    const vistaResumen = document.getElementById('padreVistaResumen');
+    const vistaDetalle = document.getElementById('padreVistaDetalle');
+    if (vistaResumen) vistaResumen.style.display = 'none';
+    if (vistaDetalle) vistaDetalle.style.display = 'block';
+
+    // Sidebar active state
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
+    const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="hijos"]`);
+    if (btn) btn.classList.add('active');
+
+    this.cargarHijos(this.hijosIds);
+
+    // Auto-seleccionar primer hijo si no hay ninguno activo
+    if (!this.hijoActivoId && this.hijosIds.length > 0) {
+      this.seleccionarHijo(this.hijosIds[0]);
+    } else if (this.hijoActivoId) {
+      this.seleccionarHijo(this.hijoActivoId);
+    }
+  },
+
+  irADetalle(hijoId) {
+    this.hijoActivoId = hijoId;
+    this.mostrarVistaHijos();
+    setTimeout(() => this.seleccionarHijo(hijoId), 50);
+  },
+
+  volverResumen() {
+    const vistaResumen = document.getElementById('padreVistaResumen');
+    const vistaDetalle = document.getElementById('padreVistaDetalle');
+    if (vistaDetalle) vistaDetalle.style.display = 'none';
+    if (vistaResumen) vistaResumen.style.display = 'block';
+
+    // Sidebar active state
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(btn => btn.classList.remove('active'));
+    const btn = document.querySelector(`.sidebar-nav .nav-link[data-padre-view="resumen"]`);
+    if (btn) btn.classList.add('active');
+
+    const pageTitle = document.getElementById('pageTitle');
+    if (pageTitle) pageTitle.textContent = 'Panel de familia';
+    const sub = document.getElementById('pageSubtitle');
+    if (sub) sub.textContent = 'Monitorea el avance de tus hijos.';
+  },
+
+  // ==========================================
+  // CARGAR HIJOS (lista lateral en vista detalle)
   // ==========================================
 
   cargarHijos(hijosIds) {
@@ -26,39 +184,30 @@ const Padre = {
     if (!container) return;
 
     if (hijosIds.length === 0) {
-      container.innerHTML = '<p class="muted" style="padding: 1rem; text-align: center;">No tienes hijos asignados en el sistema.</p>';
+      container.innerHTML = '<p style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.88rem;">No tienes hijos asignados.</p>';
       return;
     }
 
-    container.innerHTML = hijosIds.map(hijoId => {
+    container.innerHTML = hijosIds.map((hijoId, i) => {
       const hijo = DB.getUsuarioById(hijoId);
       if (!hijo) return '';
+      const initials = Auth.getUserInitials(hijo.nombre);
       return `
-        <button class="materia-card-btn" id="btnHijo_${hijo.id}" onclick="Padre.seleccionarHijo('${hijo.id}')" style="display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1rem; width: 100%;">
-          <div class="user-table-avatar estudiante" style="width: 40px; height: 40px; font-size: 0.95rem; flex-shrink: 0;">
-            ${Auth.getUserInitials(hijo.nombre)}
+        <button class="docente-materia-btn ${this.hijoActivoId === hijo.id ? 'active' : ''}" id="btnHijo_${hijo.id}" onclick="Padre.seleccionarHijo('${hijo.id}')" style="animation-delay: ${i * 0.05}s">
+          <div class="docente-materia-avatar estudiante-avatar">${initials}</div>
+          <div class="docente-materia-info">
+            <span class="docente-materia-name">${hijo.nombre}</span>
+            <span class="docente-materia-sec">Sección: <strong>${hijo.seccion || '—'}</strong></span>
           </div>
-          <div style="flex: 1; text-align: left; overflow: hidden;">
-            <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${hijo.nombre}</div>
-            <div style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--text-muted);">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>Sección: <strong>${hijo.seccion || 'Sin asignar'}</strong></span>
-            </div>
+          <div class="docente-materia-chevron">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </div>
         </button>
       `;
     }).join('');
 
-    // Stagger animation para cards de hijos
-    const cards = container.querySelectorAll('.materia-card-btn');
-    cards.forEach((card, i) => {
-      card.classList.add('list-item-enter');
-      card.style.animationDelay = `${i * 0.05}s`;
-    });
-
-    if (hijosIds.length > 0) {
-      this.seleccionarHijo(hijosIds[0]);
-    }
+    const cards = container.querySelectorAll('.docente-materia-btn');
+    cards.forEach(c => c.classList.add('list-item-enter'));
   },
 
   // ==========================================
@@ -68,39 +217,47 @@ const Padre = {
   seleccionarHijo(hijoId) {
     this.hijoActivoId = hijoId;
 
-    // Actualizar UI activa
-    document.querySelectorAll('#listaHijosCards .materia-card-btn').forEach(btn => btn.classList.remove('active'));
-    const btnActivo = document.getElementById(`btnHijo_${hijoId}`);
-    if (btnActivo) btnActivo.classList.add('active');
+    document.querySelectorAll('#listaHijosCards .docente-materia-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`btnHijo_${hijoId}`);
+    if (btn) btn.classList.add('active');
 
-    // Cambiar paneles
-    document.getElementById('panelPadreVacio').style.display = 'none';
-    const container = document.getElementById('infoHijo');
-    container.style.display = 'block';
+    const panelVacio = document.getElementById('panelPadreVacio');
+    if (panelVacio) panelVacio.style.display = 'none';
+
+    const infoHijo = document.getElementById('infoHijo');
+    if (infoHijo) infoHijo.style.display = 'flex';
 
     const hijo = DB.getUsuarioById(hijoId);
     if (!hijo) return;
 
-    // Llenar header
-    document.getElementById('nombreHijoActivo').textContent = hijo.nombre;
-    document.getElementById('statSeccionHijo').textContent = hijo.seccion ? `Sección ${hijo.seccion}` : 'Sin asignar';
-    const promedio = DB.getPromedioGeneral(hijoId);
-    document.getElementById('statPromedioHijo').textContent = promedio;
+    // Header del perfil del hijo
+    const icono = document.getElementById('iconoHijoActivo');
+    if (icono) icono.textContent = Auth.getUserInitials(hijo.nombre);
+
+    const nombre = document.getElementById('nombreHijoActivo');
+    if (nombre) nombre.textContent = hijo.nombre;
+
+    const seccion = document.getElementById('statSeccionHijo');
+    if (seccion) seccion.textContent = hijo.seccion ? `Sección ${hijo.seccion}` : 'Sin asignar';
+
+    const prom = document.getElementById('statPromedioHijo');
+    if (prom) prom.textContent = DB.getPromedioGeneral(hijoId);
 
     this.renderNotas(hijoId, hijo.seccion);
     this.renderHorario(hijo.seccion);
   },
 
   // ==========================================
-  // RENDER NOTAS
+  // RENDER NOTAS (con iconos y footer)
   // ==========================================
 
   renderNotas(estudianteId, seccionNombre) {
-    const container = document.getElementById('notasHijo');
-    const seccion = DB.getSecciones().find(s => s.nombre === seccionNombre);
+    const tbody = document.getElementById('notasHijo');
+    if (!tbody) return;
 
+    const seccion = DB.getSecciones().find(s => s.nombre === seccionNombre);
     if (!seccion) {
-      container.innerHTML = this.emptyState('No se encontró la sección asignada', SVG.building);
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">Sección no encontrada</td></tr>`;
       return;
     }
 
@@ -108,96 +265,115 @@ const Padre = {
     const notas = DB.getNotasByEstudiante(estudianteId);
 
     if (materias.length === 0) {
-      container.innerHTML = this.emptyState('No hay materias registradas para esta sección', SVG.book);
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">Sin materias registradas</td></tr>`;
       return;
     }
 
-    container.innerHTML = materias.map(materia => {
+    let aprobadasCount = 0;
+    let reprobadasCount = 0;
+
+    tbody.innerHTML = materias.map(materia => {
       const nota = notas.find(n => n.materia_id === materia.id);
       const promedio = nota ? DB.calcularPromedio(nota) : '-';
+      const promNum = parseFloat(promedio);
+      const aprobado = !isNaN(promNum) && promNum >= 6;
+      if (nota) {
+        if (aprobado) aprobadasCount++;
+        else reprobadasCount++;
+      }
       const promedioClass = this.getNotaClass(promedio);
       const docente = DB.getUsuarioById(materia.docente_id);
+      const icon = this.getMateriaIconInfo(materia.nombre);
 
       return `
-        <div class="nota-card">
-          <div>
-            <div class="materia-name">${materia.nombre}</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-              Docente: ${docente ? docente.nombre : 'Sin asignar'}
-            </div>
-            <div class="notas-grid">
-              <div class="nota-item">
-                <div class="label">Nota 1</div>
-                <div class="value">${nota ? nota.nota1 : '-'}</div>
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="est-materia-icon ${icon.colorClass}" style="width: 32px; height: 32px; flex-shrink: 0;">
+                ${icon.symbol}
               </div>
-              <div class="nota-item">
-                <div class="label">Nota 2</div>
-                <div class="value">${nota ? nota.nota2 : '-'}</div>
-              </div>
-              <div class="nota-item">
-                <div class="label">Nota 3</div>
-                <div class="value">${nota ? nota.nota3 : '-'}</div>
+              <div>
+                <div style="font-weight: 600; color: var(--text-primary); font-size: 0.92rem;">${materia.nombre}</div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">${docente ? docente.nombre : 'Docente asignado'}</div>
               </div>
             </div>
-          </div>
-          <div class="promedio ${promedioClass}">
-            ${promedio}
-          </div>
-        </div>
+          </td>
+          <td class="tnum" style="text-align: center; font-weight: 600;">${nota ? nota.nota1 : '—'}</td>
+          <td class="tnum" style="text-align: center; font-weight: 600;">${nota ? nota.nota2 : '—'}</td>
+          <td class="tnum" style="text-align: center; font-weight: 600;">${nota ? nota.nota3 : '—'}</td>
+          <td style="text-align: center;">
+            <span class="docente-prom-badge ${promedioClass}">${promedio}</span>
+          </td>
+          <td style="text-align: center;">
+            ${nota
+              ? `<span style="font-size: 0.78rem; font-weight: 600; color: ${aprobado ? '#34d399' : '#f87171'}; padding: 0.25rem 0.65rem; background: ${aprobado ? 'rgba(52,211,153,0.12)' : 'rgba(248,113,113,0.12)'}; border-radius: 20px; border: 1px solid ${aprobado ? 'rgba(52,211,153,0.3)' : 'rgba(248,113,113,0.3)'};">${aprobado ? 'Aprobada' : 'Reprobada'}</span>`
+              : '<span style="font-size: 0.78rem; color: var(--text-muted);">Sin notas</span>'
+            }
+          </td>
+        </tr>
       `;
     }).join('');
 
-    // Stagger animation para cards de notas
-    const cards = container.querySelectorAll('.nota-card');
-    cards.forEach((card, i) => {
-      card.classList.add('list-item-enter');
-      card.style.animationDelay = `${i * 0.05}s`;
-    });
+    // Actualizar texto del footer
+    const footerTexto = document.getElementById('resumenHijoTexto');
+    if (footerTexto) {
+      footerTexto.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Resumen: <strong>${aprobadasCount} Aprobadas</strong> | <strong>${reprobadasCount} Reprobadas</strong> | Total: ${materias.length} materias</span>
+      `;
+    }
   },
 
   // ==========================================
-  // RENDER HORARIO
+  // RENDER HORARIO (5 columnas estilizadas)
   // ==========================================
 
   renderHorario(seccionNombre) {
     const container = document.getElementById('horarioHijo');
-    const seccion = DB.getSecciones().find(s => s.nombre === seccionNombre);
+    if (!container) return;
 
+    const seccion = DB.getSecciones().find(s => s.nombre === seccionNombre);
     if (!seccion) {
-      container.innerHTML = this.emptyState('No se encontró la sección', SVG.building);
+      container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.88rem;">Sección no encontrada.</p>`;
       return;
     }
 
     const horarios = DB.getHorariosBySeccion(seccion.id);
-
-    if (horarios.length === 0) {
-      container.innerHTML = this.emptyState('No hay horarios asignados', SVG.clock);
-      return;
-    }
-
     const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    const diaCorto = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES'];
+    const hoyLong = new Date().toLocaleDateString('es-SV', { weekday: 'long' });
+    const hoyCapital = hoyLong.charAt(0).toUpperCase() + hoyLong.slice(1);
 
     container.innerHTML = `
-      <div class="horario-grid">
-        ${dias.map(dia => {
-          const horariosDia = horarios.filter(h => h.dia === dia);
-          horariosDia.sort((a, b) => a.hora_inicio.localeCompare(b.hora_inicio));
-
+      <div class="padre-horario-grid">
+        ${dias.map((dia, idx) => {
+          const clases = horarios.filter(h => h.dia === dia).sort((a, b) => a.hora_inicio.localeCompare(b.hora_inicio));
+          const esHoy = dia === hoyCapital;
           return `
-            <div class="horario-dia">
-              <div class="horario-dia-header">${dia}</div>
-              <div class="horario-dia-content">
-                ${horariosDia.length > 0 ? horariosDia.map(h => {
+            <div class="padre-horario-dia">
+              <div class="padre-horario-dia-header ${esHoy ? 'hoy' : ''}">
+                <span>${diaCorto[idx]}</span>
+                ${esHoy ? '<span class="padre-hoy-tag">Hoy</span>' : ''}
+              </div>
+              <div class="padre-horario-dia-body">
+                ${clases.length > 0 ? clases.map(h => {
                   const materia = DB.getMateriaById(h.materia_id);
-                  const docente = materia ? DB.getUsuarioById(materia.docente_id) : null;
                   return `
-                    <div class="horario-clase">
-                      <div class="time">${h.hora_inicio} - ${h.hora_fin}</div>
-                      <div class="materia">${materia ? materia.nombre : '-'}</div>
-                      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">${docente ? docente.nombre : ''}</div>
+                    <div class="padre-horario-clase">
+                      <div class="padre-clase-time">${h.hora_inicio} - ${h.hora_fin}</div>
+                      <div class="padre-clase-nombre">${materia ? materia.nombre : '—'}</div>
+                      <div class="padre-clase-sec">Sección: ${seccion.nombre}</div>
                     </div>
                   `;
-                }).join('') : '<p class="horario-vacio">Sin clases</p>'}
+                }).join('') : `
+                  <div class="padre-horario-vacio">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <span>Sin clases</span>
+                  </div>
+                `}
               </div>
             </div>
           `;
@@ -217,15 +393,6 @@ const Padre = {
     if (num >= 7.5) return 'good';
     if (num >= 6) return 'average';
     return 'poor';
-  },
-
-  emptyState(mensaje, icon) {
-    return `
-      <div class="empty-state">
-        <div class="empty-icon">${icon}</div>
-        <h4>${mensaje}</h4>
-      </div>
-    `;
   }
 };
 

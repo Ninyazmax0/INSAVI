@@ -1,0 +1,7 @@
+# Artefactos de pruebas locales
+.playwright-mcp/
+test-*.png
+
+# Sistema
+.DS_Store
+Thumbs.db
